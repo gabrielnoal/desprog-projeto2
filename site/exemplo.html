@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <title>Bucket Sort</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&display=swap">
+    <link rel="stylesheet" href="assets/css/reset.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+    <script src="assets/js/jquery.js"></script>
+    <script src="assets/js/script.js"></script>
+  </head>
+  <body>
+    <div class="container">
+      <main>
+
+<h1>Bucket Sort</h1>
+
+<p>Como vimos na Aula 8, o algoritmo <em>merge sort</em> usa uma estratégia de divisão e conquista: divide a entrada original em duas partes, ordena recursivamente cada parte e combina essas partes ordenadas.</p>
+
+<pre class="prettybox"><code class="prettyprint">void merge_sort_r(int v[], int temp[], int l, int r) {
+    if (l == r) {
+        return;
+    }
+    int m = (l + r) / 2;
+    merge_sort_r(v, temp, l, m);
+    merge_sort_r(v, temp, m + 1, r);
+    combine(v, temp, l, m, r);
+}</code></pre>
+
+<p>Com a divisão e conquista o <em>merge sort</em> facilita a ordenação de cada vetor, pois são vetores menores.</p>
+
+<p>Ele não é o primeiro nem o ultimo algoritimo de divisão e conquista. Nesse handout pretendemos introduzir outro algoritmo conhecido como <em>Bucket Sort</em> ou <em>Bin Sort</em></p>
+
+<h2>Questão 1</h2>
+
+<p>Tente pensar em quantos mini-vetores você consegue sub-dividir um vetor de tamanho <code class="prettybox prettyprint">5</code> com valores de 0 até 999 e qual seria a regra (intervalo) para cada mini-vetores.</p>
+
+<blockquote><p>Dica use um vetor real, por exemplo: v = {50, 455, 578, 735, 109, 436}</p></blockquote>
+
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+
+<p>Como você pode notar existem infinitas regras para sub-dividir esse vetor. Portanto precisamos definir uma maneira &quot;padrão&quot;. Para isso primeiramente tomar em conta o intervalo dos valores do vetor original.</p>
+
+<p>Por exemplo vamos levar em conta o vetor da Questão 1:</p>
+
+<pre class="prettybox"><code class="prettyprint">v = {50, 455, 578, 735, 109, 436}</code></pre>
+
+<p>Considerando que temos um intervalo de 0 a 999 uma das soluções seria dividir em intervalos de centenas e para que tenhamos todos os intervalos das centenas ([0, 99], [100, 199], [200, 299], ..., [900, 999]) precisariamos de <code class="prettybox prettyprint">10</code> mini-vetores que chamaremos de buckets.</p>
+
+<h2>Questão 2</h2>
+
+<p>Agora que temos 10 buckets, podemos fazer um vetor de buckets dessa forma cada valor do nosso vetor de buckets sera uma lista apenas com valores com o mesmo valor na casa da centena.</p>
+
+<p>Para facilitar o código criaremos um struct chamado int_bucket que contem o numero de elementos (size) dentro dele e um ponteiro para os valores (*data):</p>
+
+<pre class="prettybox"><code class="prettyprint">typedef struct
+{
+  int size;
+  int *data;
+} int_bucket</code></pre>
+
+<p>Tente criar um pseudo-codigo que cria um vetor de buckets e separa os valores do vetor original nesses buckets.</p>
+
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+
+<pre class="prettybox"><code class="prettyprint">cria um vetor de int_bucket do tamanho do numero de buckets 
+Para um i de 0 até até numero de buckets - 1, iterando de 1 em 1:
+  Define o tamano do buckets[i] = 0;
+  Aloca memoria para o buckets[i];
+
+Para um j de 0 até n - 1 iterando de 1 em 1: //Sendo n o tamanho do nosso vetor original
+  Pega a o numero mais a esqueda do nosso valor atual;
+  Insere nosso valor no bucket correto;
+  Aumenta o tamanho do bucket;</code></pre>
+
+<p>Podemos traduzir isso para <em>C</em> da seguinte maneira:</p>
+
+<pre class="prettybox"><code class="prettyprint">#define bucket_numbers 10
+
+typedef struct
+{
+  int size;
+  int *data;
+} int_bucket;
+
+void create_bucket(int_bucket *buckets, int n)
+{
+  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
+  {
+    buckets[bucket_index].size = 0;
+    buckets[bucket_index].data = (int *)malloc(sizeof(int) * n);
+  }
+}
+
+void merge_buckets(int v[], int n, int_bucket buckets[])
+{
+  for (int v_index = 0; v_index &lt; n; v_index++)
+  {
+    int bucket_index = v[v_index] / 100;
+    buckets[bucket_index].data[buckets[bucket_index].size] = v[v_index];
+    buckets[bucket_index].size++;
+  }
+}
+
+void bucket_sort(int v[], int n)
+{
+  int_bucket buckets[bucket_numbers];
+
+  //Cria Bucket
+  create_bucket(buckets, n);
+
+  //Separa em buckets
+  merge_buckets(v, n, buckets);
+}</code></pre>
+
+<p>Se tivessemos rodado esse codigo com nosso vetor <code class="prettybox prettyprint">V</code> teriamos buckets exatamente assim:</p>
+
+<pre class="prettybox"><code class="prettyprint">Bucket [0,99]: {50}
+Bucket [100,199]: {109}
+Bucket [200,299]: {}
+Bucket [300,399]: {}
+Bucket [400,499]: {455, 436}
+Bucket [500,599]: {578}
+Bucket [600,699]: {}
+Bucket [700,799]: {735}
+Bucket [800,899]: {}
+Bucket [900,999]: {}</code></pre>
+
+<p>Agora que temos os buckets quse prontos, podemos notar que o Bucket[400, 499] não esta ordenado! Ou seja não podemos apenas juntar todos eles.</p>
+
+<h2>Questão 3</h2>
+
+<p>Será necessario a ultilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da caracteristica do nosso bucket a ser ordernado podemos opitar por uma ou outra ordenação.</p>
+
+<p>Nesse handout vamos ultilizar um mesmo algoritimo de ordenação, que já aprendemos, para todos os buckets.</p>
+
+<p>Olhe a <a href="https://learn-us-east-1-prod-fleet01-xythos.s3.us-east-1.amazonaws.com/5e08d75562378/1587189?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27Tabela1%25281%2529.pdf&amp;response-content-type=application%2Fpdf&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20200507T172221Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=21600&amp;X-Amz-Credential=AKIAZH6WM4PLTYPZRQMY%2F20200507%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=f3936156610ea760e6e55249f672a65ad309ec99b97b7668a3861498995b2049" target="_blank">tabela de ordeção</a> e determine qual algoritimo é melhor para esta tarefa.</p>
+
+<blockquote><p>Dica: Se ultilizado eficientemente, o bucket sort gera buckets pequenos.</p></blockquote>
+
+<p>NÃO CONTINUE SEM VALIDAR NO CANAL GERAL</p>
+
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+
+<p>Esperamos que voçe tenha esolhido utilizar o <em>Insertion Sort</em> para essa tarefa, tendo em vista que muitas vezes os buckets ja estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos ja ordernados seria O(n).</p>
+
+<pre class="prettybox"><code class="prettyprint">void insertion_sort(int v[], int n)
+{
+  for (int i = 1; i &lt; n; i++)
+  {
+    int temp = v[i];
+
+    int h = i;
+    while (h &gt; 0 &amp;&amp; temp &lt; v[h - 1])
+    {
+      v[h] = v[h - 1];
+      h--;
+    }
+
+    v[h] = temp;
+  }
+}</code></pre>
+
+<p>Com o algoritimo definido faremos nossa função de ordenação que sera chamada a cada bucket.</p>
+
+<pre class="prettybox"><code class="prettyprint">void sort(int *v, int_bucket buckets[]){
+  int v_index = 0;
+  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
+  {
+    insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
+  }
+}</code></pre>
+
+<p>Apesar desta implementação não estar errada podemos melhorar ela com muita facilidade.</p>
+
+<h2>Questão 4</h2>
+
+<p>Qual o problema com essa implementação?</p>
+
+<p>NÃO CONTINUE SEM VIR VALIDAR NO CANAL GERAL</p>
+
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+
+<p>Estamos ultilizando o <em>Insetion Sort</em> em todos os buckets apesar de provavelmente existirem buckets vazios. Isso pode ser facilmente contornado com um simples <em>if</em>.</p>
+
+<pre class="prettybox"><code class="prettyprint">void sort(int *v, int_bucket buckets[]){
+  int v_index = 0;
+  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
+  {
+    insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
+  }
+}</code></pre>
+
+<p>Agora que temos todos os buckets ordenados podemos finalmente juntar-los em um vetor novamente. Essa implementação é muito simples por isso não vou pedir para você fazer nada.</p>
+
+<pre class="prettybox"><code class="prettyprint">void combine(int *v, int_bucket buckets[], int v_index, int bucket_index)
+{
+  for (int data_index = 0; data_index &lt; buckets[bucket_index].size; data_index++)
+    v[v_index + data_index] = buckets[bucket_index].data[data_index];
+}
+
+void sort(int *v, int_bucket buckets[]){
+  int v_index = 0;
+  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
+  {
+    if (buckets[bucket_index].size)
+    {
+      insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
+
+      combine(v, buckets, v_index, bucket_index);
+
+      v_index += buckets[bucket_index].size;
+    }
+  }
+}</code></pre>
+
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+
+<h2>OPA PARABÉNS O IGOR ACABOU DE REPROVAR VOCÊ!</h2>
+
+<p>Se ulitilizamos o malloc para fazer os buckets não podemos esquecer de ultilizar o free! </p>
+
+<pre class="prettybox"><code class="prettyprint">void sort(int *v, int_bucket buckets[]){
+  int v_index = 0;
+  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
+  {
+    if (buckets[bucket_index].size)
+    {
+      insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
+
+      combine(v, buckets, v_index, bucket_index);
+
+      v_index += buckets[bucket_index].size;
+    }
+
+    free(buckets[bucket_index].data);
+  }
+}</code></pre>
+
+<p>Codigo final </p>
+
+<pre class="prettybox"><code class="prettyprint">#define bucket_numbers 10
+
+void create_bucket(int_bucket *buckets, int n)
+{
+  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
+  {
+    buckets[bucket_index].size = 0;
+    buckets[bucket_index].data = (int *)malloc(sizeof(int) * n);
+  }
+}
+
+void merge_buckets(int v[], int n, int_bucket buckets[])
+{
+  for (int v_index = 0; v_index &lt; n; v_index++)
+  {
+    int bucket_index = v[v_index] / 100;
+    buckets[bucket_index].data[buckets[bucket_index].size] = v[v_index];
+    buckets[bucket_index].size++;
+  }
+}
+
+void combine(int *v, int_bucket buckets[], int v_index, int bucket_index)
+{
+  for (int data_index = 0; data_index &lt; buckets[bucket_index].size; data_index++)
+    v[v_index + data_index] = buckets[bucket_index].data[data_index];
+}
+
+void sort(int *v, int_bucket buckets[]){
+  int v_index = 0;
+  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
+  {
+    if (buckets[bucket_index].size)
+    {
+      insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
+
+      combine(v, buckets, v_index, bucket_index);
+
+      v_index += buckets[bucket_index].size;
+    }
+
+    free(buckets[bucket_index].data);
+  }
+}
+
+void bucket_sort(int v[], int n)
+{
+  int_bucket buckets[bucket_numbers];
+
+  //Cria Bucket
+  create_bucket(buckets, n);
+
+  //Separa em buckets
+  merge_buckets(v, n, buckets);
+
+  //Ordena
+  sort(v, buckets);
+}</code></pre>
+
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+
+<h2>Complexidade</h2>
+
+<h2>Disafio:</h2>
+
+<p>Para que o Bucket Sort seja eficiente temos que nos certificar que os intervalos e o numero de buckets que definimos estão corretos.</p>
+
+<p>Tente determinar intervalos para os seguintes vetores:</p>
+
+<ul><li><p>v variando de 0 até 1</p></li><li><p>v variando de 0 até 10</p></li><li><p>v variando de 0 até 100</p></li></ul>
+
+<p>Qual parte do codigo mudariamos??</p>
+
+      </main>
+      <footer>
+        <a href="http://creativecommons.org/licenses/by-sa/4.0/" target="_blank">
+          <img alt="Creative Commons Attribution-ShareAlike 4.0 International License" src="https://i.creativecommons.org/l/by-sa/4.0/80x15.png" title="Creative Commons Attribution-ShareAlike 4.0 International License"/>
+        </a>
+        © 2020 Desafios de Programação
+      </footer>
+    </div>
+  </body>
+</html>

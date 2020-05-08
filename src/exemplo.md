@@ -11,6 +11,7 @@ Como vimos na Aula 8, o algoritmo *merge sort* usa uma estratégia de divisão e
         merge_sort_r(v, temp, l, m);
         merge_sort_r(v, temp, m + 1, r);
         combine(v, temp, l, m, r);
+
     }
 
     
@@ -21,7 +22,7 @@ Ele não é o primeiro nem o ultimo algoritimo de divisão e conquista. Nesse ha
 
 ## Questão 1
 
-Tente pensar em quantos mini-vetores você consegue sub-dividir um vetor de tamanho `5` com valores de 0 até 999 e qual seria a regra (intervalo) para cada mini-vetores.
+Tente pensar em quantos mini-vetores você consegue sub-dividir um vetor de tamanho `6` com valores de 0 até 999 e qual seria a regra (intervalo) para cada mini-vetores.
 
 > Dica use um vetor real, por exemplo: v = {50, 455, 578, 735, 109, 436}
 
@@ -77,6 +78,7 @@ Podemos traduzir isso para *C* da seguinte maneira:
       {
         buckets[bucket_index].size = 0;
         buckets[bucket_index].data = (int *)malloc(sizeof(int) * n);
+
       }
     }
 
@@ -145,18 +147,21 @@ Esperamos que voçe tenha esolhido utilizar o *Insertion Sort* para essa tarefa,
           h--;
         }
 
-        v[h] = temp;
+        v[h] = temp; 
+
       }
+
     }
 
 Com o algoritimo definido faremos nossa função de ordenação que sera chamada a cada bucket.
 
     void sort(int *v, int_bucket buckets[]){
-      int v_index = 0;
+      int v_index = 0; 
       for (int bucket_index = 0; bucket_index < bucket_numbers; bucket_index++)
       {
-        insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
+        insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size); 
       }
+
     }
 
     
@@ -174,10 +179,10 @@ NÃO CONTINUE SEM VIR VALIDAR NO CANAL GERAL
 Estamos ultilizando o *Insetion Sort* em todos os buckets apesar de provavelmente existirem buckets vazios. Isso pode ser facilmente contornado com um simples *if*.
 
     void sort(int *v, int_bucket buckets[]){
-      int v_index = 0;
+      int v_index = 0; 
       for (int bucket_index = 0; bucket_index < bucket_numbers; bucket_index++)
       {
-        insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
+        insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size); 
       }
     }
 
@@ -186,7 +191,7 @@ Agora que temos todos os buckets ordenados podemos finalmente juntar-los em um v
     void combine(int *v, int_bucket buckets[], int v_index, int bucket_index)
     {
       for (int data_index = 0; data_index < buckets[bucket_index].size; data_index++)
-        v[v_index + data_index] = buckets[bucket_index].data[data_index];
+        v[v_index + data_index] = buckets[bucket_index].data[data_index]; 
     }
 
     void sort(int *v, int_bucket buckets[]){
@@ -202,6 +207,7 @@ Agora que temos todos os buckets ordenados podemos finalmente juntar-los em um v
           v_index += buckets[bucket_index].size;
         }
       }
+
     }
 
 ###
@@ -223,11 +229,13 @@ Se ulitilizamos o malloc para fazer os buckets não podemos esquecer de ultiliza
           v_index += buckets[bucket_index].size;
         }
 
-        free(buckets[bucket_index].data);
+        free(buckets[bucket_index].data); 
+
       }
+
     }
 
-Codigo final 
+ ## Codigo final 
 
     #define bucket_numbers 10
 
@@ -237,7 +245,9 @@ Codigo final
       {
         buckets[bucket_index].size = 0;
         buckets[bucket_index].data = (int *)malloc(sizeof(int) * n);
+
       }
+
     }
 
     void merge_buckets(int v[], int n, int_bucket buckets[])
@@ -247,13 +257,16 @@ Codigo final
         int bucket_index = v[v_index] / 100;
         buckets[bucket_index].data[buckets[bucket_index].size] = v[v_index];
         buckets[bucket_index].size++;
+
       }
+
     }
 
     void combine(int *v, int_bucket buckets[], int v_index, int bucket_index)
     {
       for (int data_index = 0; data_index < buckets[bucket_index].size; data_index++)
-        v[v_index + data_index] = buckets[bucket_index].data[data_index];
+        v[v_index + data_index] = buckets[bucket_index].data[data_index]; 
+
     }
 
     void sort(int *v, int_bucket buckets[]){
@@ -269,8 +282,10 @@ Codigo final
           v_index += buckets[bucket_index].size;
         }
 
-        free(buckets[bucket_index].data);
+        free(buckets[bucket_index].data); 
+
       }
+
     }
 
     void bucket_sort(int v[], int n)
@@ -284,26 +299,51 @@ Codigo final
       merge_buckets(v, n, buckets);
 
       //Ordena
-      sort(v, buckets);
+      sort(v, buckets); 
+
     }
 
+## Questão 5
+
+Para entender o funcionamento da complexidade deste metodo, iremos separar o entendimento em 2 partes, sendo elas: 
+
+  1 - Analise do tempo de execução para distribuição do vetor de entrada em buckets.
+
+  2 - Analise do tempo de execução para ordernação de cada bucket.
+
+Em nossa analise, consideraremos 2 parâmetros n ( numero de elementos ) e k ( numero de buckets ).
+
+Qual é a complexidade do bucket sort quando se diz a respeito de organizar a entrada em diferentes baldes?
+
+###  
+
+   Não nos leva muito tempo ate entender que será uma complexidade de O(n), tendo em vista que todos os elementos do vetor devem ser percorridos.
+   Entretanto, ao tentar compreender a parte 2 da complexidade deste modelo algumas incertezas são criadas.
+
+## Questão 5.a
+
+   Qual seria seu primeiro palpite a respeito da segunda parte da complexidade do modelo?
+   
 ###
 
-## Complexidade
+   Se você imaginou que a resposta seria $$\ 0(\frac{n}{k})$$ para cada bucket, ou seja $$\ O(k*($$\frac{n}{k}$$))$$, parabens você esta no caminho correto, entretanto ainda faltsam extras para acertar a complexidade.
+
+   A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nitido que não se leva um tempo de execução de $$\frac{n}{k}$$, muito menos algum multiplo constante de $$\frac{n}{k}$$.
+
+## Questão 5.b
+
+   Tente adivinhar o que aconteceria caso o balde estivesse vazio.
+   
+###
+
+  No caso de um balde vazio, o codigo ainda gasta tempo de execução com o mesmo ja que deve analizar se possui algum valor dentro de cada um dos buckets presentes sendo necessario adicionar a formula um elemento constante c0 e c1 que nada mais são que constantes especificas de implementação, passando a formula para $$\ O(C_0\frac{n}{k}+C_1)$$.
+  Ao ver a formula a primeira coisa que provavelmente ira pensar é que nada ira mudar ja que $$\ O(C_0\frac{n}{k}+C_1) = O(\frac{n}{k})$$ , entretanto, tudo ira mudar ao considerarmos o fator k de multiplicação a complexidade, observe:
+  
+  $$$\ O(n) = O(k*(C_0\frac{n}{k}+C_1)) = O(C_0*n+k*C_1) $$$
+   
+  Percebemos então que a formula é totalmente dependente de k, fazendo com que o tempo de execução seja $$\ O(n + k)$$
 
 
+## Extra:
 
-## Disafio:
-
-Para que o Bucket Sort seja eficiente temos que nos certificar que os intervalos e o numero de buckets que definimos estão corretos.
-
-Tente determinar intervalos para os seguintes vetores:
-
-* v variando de 0 até 1
-
-* v variando de 0 até 10
-
-* v variando de 0 até 100
-
-Qual parte do codigo mudariamos??
-
+Disponibilizamos o [código fonte](https://learn-us-east-1-prod-fleet01-xythos.s3.us-east-1.amazonaws.com/5e08d75562378/1587189?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27Tabela1%25281%2529.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200507T172221Z&X-Amz-SignedHeaders=host&X-Amz-Expires=21600&X-Amz-Credential=AKIAZH6WM4PLTYPZRQMY%2F20200507%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=f3936156610ea760e6e55249f672a65ad309ec99b97b7668a3861498995b2049) para que você possa brincar.

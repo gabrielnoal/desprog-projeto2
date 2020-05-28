@@ -104,7 +104,7 @@ void insertion_sort(int v[], int n)
   //logV("insertion_sort: ", v, n);
 }
 
-void create_bucket(int_bucket *buckets, int n)
+void create_buckets(int_bucket *buckets, int n)
 {
   for (int bucket_index = 0; bucket_index < bucket_numbers; bucket_index++)
   {
@@ -113,7 +113,7 @@ void create_bucket(int_bucket *buckets, int n)
   }
 }
 
-void merge_buckets(int v[], int n, int_bucket buckets[])
+void buckets_partition(int v[], int n, int_bucket buckets[])
 {
   for (int v_index = 0; v_index < n; v_index++)
   {
@@ -151,10 +151,10 @@ void bucket_sort(int v[], int n)
   int_bucket buckets[bucket_numbers];
 
   //Cria Bucket
-  create_bucket(buckets, n);
+  create_buckets(buckets, n);
 
   //Separa em buckets
-  merge_buckets(v, n, buckets);
+  buckets_partition(v, n, buckets);
 
   //Loga os buckets
   logBuckets(buckets);

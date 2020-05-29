@@ -1,11 +1,7 @@
 <!DOCTYPE html>
 <html lang="pt-br">
   <head>
-    <title>1-Tirar divisão e conquista
-2-Trocar merge sort para quick sort
-3- Como o quick sort divide em grandes e pequenos com um elemento pivô, vamos supor q a gnt saiba q os elementos tão no intervalo.
-4- Menos código.
-5 - Tirar a parte do Igor kkk</title>
+    <title>Bucket Sort</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Fira+Sans+Extra+Condensed:700|Oxygen+Mono|Source+Sans+Pro:700|Source+Serif+Pro&display=swap">
@@ -20,14 +16,6 @@
   <body>
     <div class="container">
       <main>
-
-<p>1-Tirar divisão e conquista
-2-Trocar merge sort para quick sort
-3- Como o quick sort divide em grandes e pequenos com um elemento pivô, vamos supor q a gnt saiba q os elementos tão no intervalo.
-4- Menos código.
-5 - Tirar a parte do Igor kkk</p>
-
-<p>6 - Complexidade (min 7:55)</p>
 
 <h1>Bucket Sort</h1>
 
@@ -169,17 +157,17 @@ Bucket [900,999]: {}</code></pre>
 
 <h2>Questão 4</h2>
 
-<p>Será necessario a ultilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da caracteristica do nosso bucket a ser ordernado podemos opitar por uma ou outra ordenação.</p>
+<p>Será necessario a ultilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da caracteristica do nosso bucket a ser ordernado podemos optar por uma ou outra ordenação.</p>
 
 <p>Nesse handout vamos ultilizar um mesmo algoritimo de ordenação, que já aprendemos, para todos os buckets.</p>
 
 <p>Olhe a <a href="https://learn-us-east-1-prod-fleet01-xythos.s3.us-east-1.amazonaws.com/5e08d75562378/1587189?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27Tabela1%25281%2529.pdf&amp;response-content-type=application%2Fpdf&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20200507T172221Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=21600&amp;X-Amz-Credential=AKIAZH6WM4PLTYPZRQMY%2F20200507%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=f3936156610ea760e6e55249f672a65ad309ec99b97b7668a3861498995b2049" target="_blank">tabela de ordeção</a> e determine qual algoritimo é melhor para esta tarefa.</p>
 
-<blockquote><p>Dica: Se ultilizado eficientemente, o bucket sort gera buckets pequenos.</p></blockquote>
+<blockquote><p>Dica: Se ultilizado eficientemente, o bucket sort gera apenas buckets pequenos.</p></blockquote>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<p>Esperamos que voçe tenha esolhido utilizar o <em>Insertion Sort</em> para essa tarefa, tendo em vista que muitas vezes os buckets ja estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos ja ordernados seria O(n).</p>
+<p>Esperamos que voçe tenha escolhido utilizar o <em>Insertion Sort</em> para essa tarefa, tendo em vista que muitas vezes como eles são pequenos, os buckets já estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos ja ordernados seria O(n).</p>
 
 <pre class="prettybox"><code class="prettyprint">void insertion_sort(int v[], int n)
 {
@@ -211,16 +199,6 @@ Bucket [900,999]: {}</code></pre>
 
 }</code></pre>
 
-<p>Apesar desta implementação não estar errada podemos melhorar ela com muita facilidade.</p>
-
-<h2>Questão 5</h2>
-
-<p>Qual o problema com essa implementação?</p>
-
-<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
-
-<p>Estamos ultilizando o <em>Insetion Sort</em> em todos os buckets apesar de provavelmente existirem buckets vazios. Isso pode ser facilmente contornado com um simples <em>if</em>.</p>
-
 <p>Agora que temos todos os buckets ordenados podemos finalmente juntar-los em um vetor novamente. Essa implementação é muito simples por isso não vou pedir para você fazer nada, basta usar essa função combine.</p>
 
 <pre class="prettybox"><code class="prettyprint">void combine(int *v, int_bucket buckets[], int v_index, int bucket_index)
@@ -229,110 +207,69 @@ Bucket [900,999]: {}</code></pre>
     v[v_index + data_index] = buckets[bucket_index].data[data_index]; 
 }</code></pre>
 
-<h2>Codigo final</h2>
+<p>Muita calma nessa hora, sem fechar a aba ainda. Como de costume ainda falta uma parte essencial do handout, a tão adorada análise de complexidade!</p>
 
-<pre class="prettybox"><code class="prettyprint">#define bucket_numbers 10
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-void create_buckets(int_bucket *buckets, int n)
-{
-  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
-  {
-    buckets[bucket_index].size = 0;
-    buckets[bucket_index].data = (int *)malloc(sizeof(int) * n);
-  }
-
-}
-
-void buckets_partition(int v[], int n, int_bucket buckets[])
-{
-  for (int v_index = 0; v_index &lt; n; v_index++)
-  {
-    int bucket_index = v[v_index] / 100;
-    buckets[bucket_index].data[buckets[bucket_index].size] = v[v_index];
-    buckets[bucket_index].size++;
-  }
-
-}
-
-void combine(int *v, int_bucket buckets[], int v_index, int bucket_index)
-{
-  for (int data_index = 0; data_index &lt; buckets[bucket_index].size; data_index++) {
-    v[v_index + data_index] = buckets[bucket_index].data[data_index]; 
-  }
-}
-
-void sort(int *v, int_bucket buckets[]){
-  int v_index = 0;
-  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
-  {
-    if (buckets[bucket_index].size)
-    {
-      insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
-
-      combine(v, buckets, v_index, bucket_index);
-
-      v_index += buckets[bucket_index].size;
-    }
-
-    free(buckets[bucket_index].data); 
-
-  }
-
-}
-
-void bucket_sort(int v[], int n)
-{
-  int_bucket buckets[bucket_numbers];
-
-  //Cria Bucket
-  create_buckets(buckets, n);
-
-  //Separa em buckets
-  buckets_partition(v, n, buckets);
-
-  //Ordena
-  sort(v, buckets); 
-}</code></pre>
-
-<h2>Questão 5</h2>
-
-<p>Para entender o funcionamento da complexidade deste metodo, iremos separar o entendimento em 2 partes, sendo elas: </p>
+<p>Para entender o funcionamento da complexidade deste método, iremos comecar com o entendimento de duas partes cruciais para o metodo em questão, sendo elas: </p>
 
 <p>  1 - Analise do tempo de execução para distribuição do vetor de entrada em buckets.</p>
 
 <p>  2 - Analise do tempo de execução para ordernação de cada bucket.</p>
 
+<p>Começaremos com o estudo do caso ideal e desejado pelo Bucket Sort com um tempo linear de ordenação igual a O(n), este que espera buckets com valores já ordenados, consequentemente deixando o ideal para casos em que há poucos valores em cada balde, dado que quanto menos elementos dentro de cada bucket, mais facil será de os mesmos ja se encontrarem ordenados.</p>
+
 <p>Em nossa analise, consideraremos 2 parâmetros n ( numero de elementos ) e k ( numero de buckets ).</p>
 
-<p>Qual é a complexidade do bucket sort quando se diz a respeito de organizar a entrada em diferentes baldes?</p>
+<h2>Questão 6</h2>
+
+<p>Qual é a complexidade do bucket sort quando se diz a respeito de organizar a entrada em diferentes buckets?</p>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<p>   Não nos leva muito tempo ate entender que será uma complexidade de O(n), tendo em vista que todos os elementos do vetor devem ser percorridos.
-   Entretanto, ao tentar compreender a parte 2 da complexidade deste modelo algumas incertezas são criadas.</p>
+<p>Não nos leva muito tempo até entender que será uma complexidade de O(n), tendo em vista que todos os elementos do vetor devem ser percorridos.
+Entretanto, ao tentar compreender a parte 2 da complexidade deste modelo algumas incertezas são criadas.
+Por exemplo, um primeiro palpite comum a ser dado para a complexidade do modelo pode ser: \(\ 0(\frac{n}{k})\) 
+para cada bucket, ou seja \(\ O(k*(\frac{n}{k}))\)</p>
 
-<h2>Questão 5.a</h2>
+<p>A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nitido que não se leva um tempo de execução de \(\frac{n}{k}\), muito menos algum multiplo constante de \(\frac{n}{k}\).</p>
 
-<p>   Qual seria seu primeiro palpite a respeito da segunda parte da complexidade do modelo?</p>
+<h2>Questão 6.a</h2>
 
-<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
-
-<p>   Se você imaginou que a resposta seria \(\ 0(\frac{n}{k})\) para cada bucket, ou seja \(\ O(k*(\)\frac{n}{k}\())\), parabens você esta no caminho correto, entretanto ainda faltsam extras para acertar a complexidade.</p>
-
-<p>   A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nitido que não se leva um tempo de execução de \(\frac{n}{k}\), muito menos algum multiplo constante de \(\frac{n}{k}\).</p>
-
-<h2>Questão 5.b</h2>
-
-<p>   Tente adivinhar o que aconteceria caso o balde estivesse vazio.</p>
+<p>Tente adivinhar o que aconteceria caso o balde estivesse vazio.</p>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<p>  No caso de um balde vazio, o codigo ainda gasta tempo de execução com o mesmo ja que deve analizar se possui algum valor dentro de cada um dos buckets presentes sendo necessario adicionar a formula um elemento constante c0 e c1 que nada mais são que constantes especificas de implementação, passando a formula para \(\ O(C_0\frac{n}{k}+C_1)\).
-  Ao ver a formula a primeira coisa que provavelmente ira pensar é que nada ira mudar ja que \(\ O(C_0\frac{n}{k}+C_1) = O(\frac{n}{k})\) , entretanto, tudo ira mudar ao considerarmos o fator k de multiplicação a complexidade, observe:</p>
+<p>No caso de um balde vazio, o codigo ainda gasta tempo de execução com o mesmo ja que deve analisar se possui algum valor dentro de cada um dos buckets presentes sendo necessario adicionar a formula um elemento constante c0 e c1 que nada mais são que constantes especificas de implementação, passando a fórmula para \(\ O(C_0\frac{n}{k}+C_1)\).
+Ao ver a formula a primeira coisa que provavelmente ira pensar é que nada ira mudar já que \(\ O(C_0\frac{n}{k}+C_1) = O(\frac{n}{k})\) , entretanto, tudo ira mudar ao considerarmos o fator k de multiplicação a complexidade, observe:</p>
 
-<p>  \[\ O(n) = O(k*(C_0\frac{n}{k}+C_1)) = O(C_0_n+k_C_1) \]</p>
+<p>\(\ O(n)=O(k*(C_0*\frac{n}{k}+C_1)) = O((C_0)_(n) + (k)_(C_1))\)</p>
 
-<p>  Percebemos então que a formula é totalmente dependente de k, fazendo com que o tempo de execução seja \(\ O(n + k)\)</p>
+<p>Percebemos então que a formula é totalmente dependente de k, fazendo com que o tempo de execução seja \(\ O(n + k)\)</p>
+
+<p>Agora que entendemos como funciona a análise da complexidade do bucket sort em sua forma esperada (linear), vamos entender o que acontece nos outros casos para o bucket sort, quando ele não é linear.</p>
+
+<h2>Questão 6.b</h2>
+
+<p>Tente adivinhar para quais ou qual caso o bucket sort não ira operar em tempo linear O(n + k).</p>
+
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+
+<p>Por ser um algoritmo de ordenação que depende de outro algoritmo de ordenação, o bucket sort esta sucetível a considerações extras do outro algoritmo em questão. Como o que utilizamos foi o Insertion Sort, iremos discorrer a respeito do mesmo. O insertion sort é um algoritmo que pode ser levado como quadrático ou linear (no seu caso ideal), dado que para listas ordenadas, o mesmo opera em tempo de O(n), enquanto para listas que não estão ordenadas, opera em O(n²).</p>
+
+<h2>Questão 6.c</h2>
+
+<p>Levando isso em consideração, o que causaria um bucket a ter uma maior complexidade?</p>
+
+<h2></h2>
+
+<p>Voltando assim as duas partes da analise de complexidade. Temos a parte de criação de cada bucket, e como ja vimos, a mesma é \(\ O(n + k)\) e em seguida temos a parte de ordenação de cada bucket, que é delimitada pelo algoritimo do Insertion sort. Este que pode ser linear(melhor caso) ou quadratico(médio e pior caso).</p>
+
+<p>Portanto a complexidade do método bucket sort será basicamente determinada por como os buckets já estarão previamente ordenados. Por isso uma utilização otimizada do bucket sort seria em vetores que geram buckets pequenos.</p>
+
+<h2>Por hoje é só</h2>
+
+<p class="figure"><img alt="balde" src="img/balde.jpg" title="balde" class="raster"/></p>
 
 <h2>Extra:</h2>
 

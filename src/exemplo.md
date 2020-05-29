@@ -1,13 +1,3 @@
-1-Tirar divisão e conquista
-2-Trocar merge sort para quick sort
-3- Como o quick sort divide em grandes e pequenos com um elemento pivô, vamos supor q a gnt saiba q os elementos tão no intervalo.
-4- Menos código.
-5 - Tirar a parte do Igor kkk
-
-
-6 - Complexidade (min 7:55)
-
-
 Bucket Sort
 =================
 
@@ -299,7 +289,7 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
    Não nos leva muito tempo ate entender que será uma complexidade de O(n), tendo em vista que todos os elementos do vetor devem ser percorridos.
    Entretanto, ao tentar compreender a parte 2 da complexidade deste modelo algumas incertezas são criadas.
 
-## Questão 5.a
+## Questão 6.a
 
    Qual seria seu primeiro palpite a respeito da segunda parte da complexidade do modelo?
    
@@ -309,7 +299,7 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
 
    A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nitido que não se leva um tempo de execução de $$\frac{n}{k}$$, muito menos algum multiplo constante de $$\frac{n}{k}$$.
 
-## Questão 5.b
+## Questão 6.b
 
    Tente adivinhar o que aconteceria caso o balde estivesse vazio.
    
@@ -324,7 +314,25 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
 
   Agora que entendemos como funciona a análise da complexidade do bucket sort em sua forma esperada (linear), vamos entender o que acontece nos piores casos para o bucket sort, quando ele não é linear.
   
+## Questão 6.c
 
+  Tente adivinhar para quais ou qual caso o bucket sort não ira operar em tempo linear O(n + k).
+
+###
+
+  Por ser um algoritmo de ordenação que depende de outro algoritmo de ordenação, o bucket sort esta sucetivel a considerações extras do outro algoritmo em questão. Como o que utilizamos foi o Insertion Sort, iremos discorrer a respeito do mesmo. O insertion sort é um algoritmo que pode ser levado como quadratico (em seu pior caso) ou linear (caso ideal), dado que para listas pequenas, o mesmo opera em tempo de O(n), enquanto para listas grandes, opera em O(n²).
+  
+## Questão 6.d
+
+  Tendo isto em vista, o que aconteceria caso um dos buckets a ser ordenado estivesse com muitos elementos?
+
+##
+
+  O tempo de operação não seria mais linear e sim quadratico.
+  Para que isso ocorra no bucket sort, dois fatos serão provaveis.
+    1. A lista não estara distribuida de forma uniforme. Como por exemplo: [1,66,3,4,55,63,7,81,29,10,11,..26,...34,106,127,138,455,456,1006].
+    Nesse caso, o bucket sort ira ordenar cada bucket para um intervalo de i < 100, tendo isso em vista, teremos buckets que ja estarão ordenados e um bucket com muitos outros elementos, de tal forma que ao utilizar o insertion sort para ordenar o tempo de ordenação não sera mais O(n) e sim O(n²).
+    2. Todos os elementos da lista estão dentro do mesmo bucket, estando sujeito as mesmas condições citas no topico 1,
 
 ## Extra:
 

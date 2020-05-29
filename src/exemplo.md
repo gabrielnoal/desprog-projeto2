@@ -141,17 +141,17 @@ Agora que temos os buckets quase prontos, podemos notar que o Bucket[400, 499] n
 
 ## Questão 4
 
-Será necessario a ultilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da caracteristica do nosso bucket a ser ordernado podemos opitar por uma ou outra ordenação.
+Será necessario a ultilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da caracteristica do nosso bucket a ser ordernado podemos optar por uma ou outra ordenação.
 
 Nesse handout vamos ultilizar um mesmo algoritimo de ordenação, que já aprendemos, para todos os buckets.
 
 Olhe a [tabela de ordeção](https://learn-us-east-1-prod-fleet01-xythos.s3.us-east-1.amazonaws.com/5e08d75562378/1587189?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27Tabela1%25281%2529.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200507T172221Z&X-Amz-SignedHeaders=host&X-Amz-Expires=21600&X-Amz-Credential=AKIAZH6WM4PLTYPZRQMY%2F20200507%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=f3936156610ea760e6e55249f672a65ad309ec99b97b7668a3861498995b2049) e determine qual algoritimo é melhor para esta tarefa.
 
-> Dica: Se ultilizado eficientemente, o bucket sort gera buckets pequenos.
+> Dica: Se ultilizado eficientemente, o bucket sort gera apenas buckets pequenos.
 
 ###
 
-Esperamos que voçe tenha esolhido utilizar o *Insertion Sort* para essa tarefa, tendo em vista que muitas vezes os buckets ja estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos ja ordernados seria O(n).
+Esperamos que voçe tenha escolhido utilizar o *Insertion Sort* para essa tarefa, tendo em vista que muitas vezes como eles são pequenos, os buckets já estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos ja ordernados seria O(n).
 
     void insertion_sort(int v[], int n)
     {
@@ -205,72 +205,7 @@ Agora que temos todos os buckets ordenados podemos finalmente juntar-los em um v
     }
 
 
-## Codigo final 
-
-    #define bucket_numbers 10
-
-    void create_buckets(int_bucket *buckets, int n)
-    {
-      for (int bucket_index = 0; bucket_index < bucket_numbers; bucket_index++)
-      {
-        buckets[bucket_index].size = 0;
-        buckets[bucket_index].data = (int *)malloc(sizeof(int) * n);
-      }
-
-    }
-
-    void buckets_partition(int v[], int n, int_bucket buckets[])
-    {
-      for (int v_index = 0; v_index < n; v_index++)
-      {
-        int bucket_index = v[v_index] / 100;
-        buckets[bucket_index].data[buckets[bucket_index].size] = v[v_index];
-        buckets[bucket_index].size++;
-      }
-
-    }
-
-    void combine(int *v, int_bucket buckets[], int v_index, int bucket_index)
-    {
-      for (int data_index = 0; data_index < buckets[bucket_index].size; data_index++) {
-        v[v_index + data_index] = buckets[bucket_index].data[data_index]; 
-      }
-    }
-
-    void sort(int *v, int_bucket buckets[]){
-      int v_index = 0;
-      for (int bucket_index = 0; bucket_index < bucket_numbers; bucket_index++)
-      {
-        if (buckets[bucket_index].size)
-        {
-          insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
-
-          combine(v, buckets, v_index, bucket_index);
-
-          v_index += buckets[bucket_index].size;
-        }
-
-        free(buckets[bucket_index].data); 
-
-      }
-
-    }
-
-    void bucket_sort(int v[], int n)
-    {
-      int_bucket buckets[bucket_numbers];
-
-      //Cria Bucket
-      create_buckets(buckets, n);
-
-      //Separa em buckets
-      buckets_partition(v, n, buckets);
-
-      //Ordena
-      sort(v, buckets); 
-    }
-
-## Questão 5
+Muita calma nessa hora, sem fechar a aba ainda. Como de costume ainda falta uma parte essencial do handout, a tão adorada análise de complexidade!
 
 Para entender o funcionamento da complexidade deste método, iremos separar o entendimento em 4 partes, sendo elas 2 partes visando um funcionamento macro e micro da complexidade e a outra parte, sendo: 
 
@@ -278,7 +213,7 @@ Para entender o funcionamento da complexidade deste método, iremos separar o en
 
   2 - Analise do tempo de execução para ordernação de cada bucket.
 
-Começarmos a análise tanto na parte macro quanto micro do caso ideal e desejado pelo Bucket Sort com um tempo linear de ordenação igual a O(n), este que espera buckets com valores uniformemente distribuídos e poucos valores em cada balde, dado que é preferível um n pequeno para o método de ordenação utilizado dentro de cada balde (Insertion Sort).
+Começarmos a análise tanto na parte macro quanto micro do caso ideal e desejado pelo Bucket Sort com um tempo linear de ordenação igual a O(n), este que espera buckets com valores já ordenados, consequentemente deixando o ideal para casos em que há poucos valores em cada balde, dado que quanto menos elementos no array dentro de cada balde, mais facil sera de os mesmos ja se encontrarem ordenados, fazendo o tempo de operação ser O(n).
 
 Em nossa analise, consideraremos 2 parâmetros n ( numero de elementos ) e k ( numero de buckets ).
 
@@ -289,7 +224,7 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
    Não nos leva muito tempo ate entender que será uma complexidade de O(n), tendo em vista que todos os elementos do vetor devem ser percorridos.
    Entretanto, ao tentar compreender a parte 2 da complexidade deste modelo algumas incertezas são criadas.
 
-## Questão 6.a
+## Questão 5.a
 
    Qual seria seu primeiro palpite a respeito da segunda parte da complexidade do modelo?
    
@@ -299,7 +234,7 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
 
    A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nitido que não se leva um tempo de execução de $$\frac{n}{k}$$, muito menos algum multiplo constante de $$\frac{n}{k}$$.
 
-## Questão 6.b
+## Questão 5.b
 
    Tente adivinhar o que aconteceria caso o balde estivesse vazio.
    
@@ -313,26 +248,27 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
   Percebemos então que a formula é totalmente dependente de k, fazendo com que o tempo de execução seja $$\ O(n + k)$$
 
   Agora que entendemos como funciona a análise da complexidade do bucket sort em sua forma esperada (linear), vamos entender o que acontece nos piores casos para o bucket sort, quando ele não é linear.
-  
-## Questão 6.c
+
+## Questão 5.c
 
   Tente adivinhar para quais ou qual caso o bucket sort não ira operar em tempo linear O(n + k).
 
 ###
 
-  Por ser um algoritmo de ordenação que depende de outro algoritmo de ordenação, o bucket sort esta sucetivel a considerações extras do outro algoritmo em questão. Como o que utilizamos foi o Insertion Sort, iremos discorrer a respeito do mesmo. O insertion sort é um algoritmo que pode ser levado como quadratico (em seu pior caso) ou linear (caso ideal), dado que para listas pequenas, o mesmo opera em tempo de O(n), enquanto para listas grandes, opera em O(n²).
-  
-## Questão 6.d
+  Por ser um algoritmo de ordenação que depende de outro algoritmo de ordenação, o bucket sort esta sucetivel a considerações extras do outro algoritmo em questão. Como o que utilizamos foi o Insertion Sort, iremos discorrer a respeito do mesmo. O insertion sort é um algoritmo que pode ser levado como quadratico ou linear (no seu caso ideal), dado que para listas relativamente ordenadas, o mesmo opera em tempo de O(n), enquanto para listas que estao pouco ordenadas, opera em O(n²).
 
-  Tendo isto em vista, o que aconteceria caso um dos buckets a ser ordenado estivesse com muitos elementos?
+  
+## Questão 5.d
+
+  Levando isso em consideração, porque um bucket muito desordenado possui maior tempo de operação?
 
 ##
 
-  O tempo de operação não seria mais linear e sim quadratico.
-  Para que isso ocorra no bucket sort, dois fatos serão provaveis.
-    1. A lista não estara distribuida de forma uniforme. Como por exemplo: [1,66,3,4,55,63,7,81,29,10,11,..26,...34,106,127,138,455,456,1006].
-    Nesse caso, o bucket sort ira ordenar cada bucket para um intervalo de i < 100, tendo isso em vista, teremos buckets que ja estarão ordenados e um bucket com muitos outros elementos, de tal forma que ao utilizar o insertion sort para ordenar o tempo de ordenação não sera mais O(n) e sim O(n²).
-    2. Todos os elementos da lista estão dentro do mesmo bucket, estando sujeito as mesmas condições citas no topico 1,
+  Considerando que teriamos um tempo de operação quadratico e não mais linear podemos considerar os topicos a seguir:
+    1. A lista não estara distribuida de forma uniforme. Como por exemplo: [1001,662,331,4,553,63,732,8111,2923,103,1144,26,342,55,77,15623,11137,1382,4557,456,1006]. Tendo em vista que o custo de tempo para cada mudança no array é alta, ao termos uma lista muito desorganizada, teremos muitas mudanças a serem feitas no array, gastando mais tempo conforme for maior a desorganização.
+    
+    2. A lista esta em completa ordem decrescente, estando sujeito as mesmas condições citas no topico 1,
+
 
 ## Extra:
 

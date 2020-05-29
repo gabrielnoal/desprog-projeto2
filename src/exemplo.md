@@ -282,11 +282,13 @@ Agora que temos todos os buckets ordenados podemos finalmente juntar-los em um v
 
 ## Questão 5
 
-Para entender o funcionamento da complexidade deste metodo, iremos separar o entendimento em 2 partes, sendo elas: 
+Para entender o funcionamento da complexidade deste método, iremos separar o entendimento em 4 partes, sendo elas 2 partes visando um funcionamento macro e micro da complexidade e a outra parte, sendo: 
 
   1 - Analise do tempo de execução para distribuição do vetor de entrada em buckets.
 
   2 - Analise do tempo de execução para ordernação de cada bucket.
+
+Começarmos a análise tanto na parte macro quanto micro do caso ideal e desejado pelo Bucket Sort com um tempo linear de ordenação igual a O(n), este que espera buckets com valores uniformemente distribuídos e poucos valores em cada balde, dado que é preferível um n pequeno para o método de ordenação utilizado dentro de cada balde (Insertion Sort).
 
 Em nossa analise, consideraremos 2 parâmetros n ( numero de elementos ) e k ( numero de buckets ).
 
@@ -313,12 +315,15 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
    
 ###
 
-  No caso de um balde vazio, o codigo ainda gasta tempo de execução com o mesmo ja que deve analizar se possui algum valor dentro de cada um dos buckets presentes sendo necessario adicionar a formula um elemento constante c0 e c1 que nada mais são que constantes especificas de implementação, passando a formula para $$\ O(C_0\frac{n}{k}+C_1)$$.
+  No caso de um balde vazio, o codigo ainda gasta tempo de execução com o mesmo ja que deve analisar se possui algum valor dentro de cada um dos buckets presentes sendo necessario adicionar a formula um elemento constante c0 e c1 que nada mais são que constantes especificas de implementação, passando a formula para $$\ O(C_0\frac{n}{k}+C_1)$$.
   Ao ver a formula a primeira coisa que provavelmente ira pensar é que nada ira mudar ja que $$\ O(C_0\frac{n}{k}+C_1) = O(\frac{n}{k})$$ , entretanto, tudo ira mudar ao considerarmos o fator k de multiplicação a complexidade, observe:
   
   $$$\ O(n) = O(k*(C_0\frac{n}{k}+C_1)) = O(C_0*n+k*C_1) $$$
    
   Percebemos então que a formula é totalmente dependente de k, fazendo com que o tempo de execução seja $$\ O(n + k)$$
+
+  Agora que entendemos como funciona a análise da complexidade do bucket sort em sua forma esperada (linear), vamos entender o que acontece nos piores casos para o bucket sort, quando ele não é linear.
+  
 
 
 ## Extra:

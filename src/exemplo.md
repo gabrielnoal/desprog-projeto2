@@ -204,6 +204,7 @@ Agora que temos todos os buckets ordenados podemos finalmente juntar-los em um v
         v[v_index + data_index] = buckets[bucket_index].data[data_index]; 
     }
 
+## Questão 6
 
 Muita calma nessa hora, sem fechar a aba ainda. Como de costume ainda falta uma parte essencial do handout, a tão adorada análise de complexidade!
 
@@ -224,7 +225,7 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
    Não nos leva muito tempo ate entender que será uma complexidade de O(n), tendo em vista que todos os elementos do vetor devem ser percorridos.
    Entretanto, ao tentar compreender a parte 2 da complexidade deste modelo algumas incertezas são criadas.
 
-## Questão 5.a
+## Questão 6.a
 
    Qual seria seu primeiro palpite a respeito da segunda parte da complexidade do modelo?
    
@@ -234,7 +235,7 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
 
    A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nitido que não se leva um tempo de execução de $$\frac{n}{k}$$, muito menos algum multiplo constante de $$\frac{n}{k}$$.
 
-## Questão 5.b
+## Questão 6.b
 
    Tente adivinhar o que aconteceria caso o balde estivesse vazio.
    
@@ -249,7 +250,7 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
 
   Agora que entendemos como funciona a análise da complexidade do bucket sort em sua forma esperada (linear), vamos entender o que acontece nos piores casos para o bucket sort, quando ele não é linear.
 
-## Questão 5.c
+## Questão 6.c
 
   Tente adivinhar para quais ou qual caso o bucket sort não ira operar em tempo linear O(n + k).
 
@@ -258,7 +259,7 @@ Qual é a complexidade do bucket sort quando se diz a respeito de organizar a en
   Por ser um algoritmo de ordenação que depende de outro algoritmo de ordenação, o bucket sort esta sucetivel a considerações extras do outro algoritmo em questão. Como o que utilizamos foi o Insertion Sort, iremos discorrer a respeito do mesmo. O insertion sort é um algoritmo que pode ser levado como quadratico ou linear (no seu caso ideal), dado que para listas relativamente ordenadas, o mesmo opera em tempo de O(n), enquanto para listas que estao pouco ordenadas, opera em O(n²).
 
   
-## Questão 5.d
+## Questão 6.d
 
   Levando isso em consideração, porque um bucket muito desordenado possui maior tempo de operação?
 

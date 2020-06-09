@@ -1,9 +1,9 @@
 Bucket Sort
 =================
 
-Para entendermos a ideia do bucket sort primeiro faremos uma viagem para o passado até o [hangout da Aula 9](https://ensino.hashi.pro.br/desprog/aula9/handout.html) onde analisamos o algoritimo *quick sort*, imagino que você lembre a ideia basíca dele.
+Para entendermos a ideia do bucket sort primeiro faremos uma viagem para o passado até o [handout da Aula 9](https://ensino.hashi.pro.br/desprog/aula9/handout.html) onde analisamos o algorítimo *quick sort*, imagino que você lembre a ideia básica dele.
 
-Para aqueles com a memória mais limitada, o *quick sort* se baseia em separar o vetor inicial em duas partes, após a escolha de um pivô, sendo uma parte maior a outra menor, com isso o algoritimo ordena as duas partes separadamente e junta elas tendo em vista que os valores de uma já são maiores que a outra.
+Para aqueles com a memória mais limitada, o *quick sort* se baseia em separar o vetor inicial em duas partes, após a escolha de um pivô, sendo uma parte maior a outra menor, com isso o algorítimo ordena as duas partes separadamente e junta, elas tendo em vista que os valores de uma já são maiores que a outra.
 
 > Aqui esta o código do *quick sort* caso queira relembrar.
 
@@ -22,7 +22,7 @@ Para aqueles com a memória mais limitada, o *quick sort* se baseia em separar o
 
 O problema do *quick sort* é acharmos o pivô que representa a mediana do vetor, pois não sabemos o intervalo dos nossos valores.
 
-Mas e se soubessemos qual esse intervalo? Por exemplo, nossos valores estão sempre entre 0 e 1000.
+Mas e se soubéssemos qual esse intervalo? Por exemplo, nossos valores estão sempre entre 0 e 1000.
 
 ## Questão 1
 
@@ -30,13 +30,13 @@ Você consegue pensar em uma regra que divida sempre esses valores em maior e me
 
 ###
 
-Nesse caso fica facil, pois podemos dividir nosso vetor no intevalo de até 500 e maiores que 500.
+Nesse caso fica fácil, pois podemos dividir nosso vetor no intervalo de até 500 e maiores que 500.
 
-Mas e se ao invés de dividir em 2 partes quisessemos dividir em 3 ou mais? Nesse caso achar a mediana não seria o suficiente, teriamos que dividir nosso vetor em varios intervalos pré-definidos, para depois ordena-los. A vantagem disso é que quanto mais intervalos tivermos, menor fica o intervalo a ser ordenado.
+Mas e se ao invés de dividir em 2 partes quiséssemos dividir em 3 ou mais? Nesse caso achar a mediana não seria o suficiente, teríamos que dividir nosso vetor em vários intervalos pré-definidos, para depois ordena-los. A vantagem disso é que quanto mais intervalos tivermos, menor fica o intervalo a ser ordenado.
 
 Consegue ver onde quero chegar?
 
-Essa é basicamente a ideia do bucket sort. Uma vez que sabemos que nossos valores estão distribuido em um intervalo, podemos usar o conceito do *quick sort* de dividi-lo em pedacinhos e ordernar esses pedaços separadamente. Depois de separados e ordenados, fica facil juntar de novo.
+Essa é basicamente a ideia do bucket sort. Uma vez que sabemos que nossos valores estão distribuídos em um intervalo, podemos usar o conceito do *quick sort* de dividi-lo em pedacinhos e ordenar esses pedaços separadamente. Depois de separados e ordenados, fica fácil juntar de novo.
 
 
 ## Questão 2
@@ -53,7 +53,7 @@ Por exemplo vamos levar em conta o vetor da Questão 2
 
     v = {50, 455, 578, 735, 109, 436}
 
-Considerando que temos um intervalo de 0 a 999 uma das soluções seria dividir em intervalos de centenas e para que tenhamos todos os intervalos das centenas ([0, 99], [100, 199], [200, 299], ..., [900, 999]) precisariamos de `10` intervalos.
+Considerando que temos um intervalo de 0 a 999 uma das soluções seria dividir em intervalos de centenas e para que tenhamos todos os intervalos das centenas ([0, 99], [100, 199], [200, 299], ..., [900, 999]) precisaríamos de `10` intervalos.
 
 Chamaremos esses intervalos de buckets, pois são como baldes onde inserimos apenas os valores que estão dentro de cada respectivo intervalo.
 
@@ -70,17 +70,17 @@ Para facilitar o código criaremos um struct chamado int_bucket que contem o num
       int *data;
     } int_bucket
 
-Tente criar um pseudo-codigo que cria um vetor de buckets e separa os valores do vetor original nesses buckets.
+Tente criar um pseudo-código que cria um vetor de buckets e separa os valores do vetor original nesses buckets.
 
 ###
 
-    cria um vetor de int_bucket do tamanho do numero de buckets 
-    Para um i de 0 até até numero de buckets - 1, iterando de 1 em 1:
-      Define o tamano do buckets[i] = 0;
+    cria um vetor de int_bucket do tamanho do número de buckets 
+    Para um i de 0 até numero de buckets - 1, iterando de 1 em 1:
+      Define o tamanho do buckets[i] = 0;
       Aloca memoria para o buckets[i];
       
     Para um j de 0 até n - 1 iterando de 1 em 1: //Sendo n o tamanho do nosso vetor original
-      Pega a o numero mais a esqueda do nosso valor atual;
+      Pega a o numero mais a esquerda do nosso valor atual;
       Insere nosso valor no bucket correto;
       Aumenta o tamanho do bucket;
 
@@ -124,7 +124,7 @@ Podemos traduzir isso para *C* da seguinte maneira:
       buckets_partition(v, n, buckets);
     }
 
-Se rodarmos esse codigo com nosso vetor `V` teremos buckets exatamente assim:
+Se rodarmos esse código com nosso vetor `V` teremos buckets exatamente assim:
 
     Bucket [0,99]: {50}
     Bucket [100,199]: {109}
@@ -141,17 +141,17 @@ Agora que temos os buckets quase prontos, podemos notar que o Bucket[400, 499] n
 
 ## Questão 4
 
-Será necessario a ultilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da caracteristica do nosso bucket a ser ordernado podemos optar por uma ou outra ordenação.
+Será necessário a utilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da característica do nosso bucket a ser ordenado podemos optar por uma ou outra ordenação.
 
-Nesse handout vamos ultilizar um mesmo algoritimo de ordenação, que já aprendemos, para todos os buckets.
+Nesse handout vamos utilizar um mesmo algorítimo de ordenação, que já aprendemos, para todos os buckets.
 
-Olhe a [tabela de ordeção](https://learn-us-east-1-prod-fleet01-xythos.s3.us-east-1.amazonaws.com/5e08d75562378/1587189?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27Tabela1%25281%2529.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200507T172221Z&X-Amz-SignedHeaders=host&X-Amz-Expires=21600&X-Amz-Credential=AKIAZH6WM4PLTYPZRQMY%2F20200507%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=f3936156610ea760e6e55249f672a65ad309ec99b97b7668a3861498995b2049) e determine qual algoritimo é melhor para esta tarefa.
+Olhe a [tabela de ordenação](https://learn-us-east-1-prod-fleet01-xythos.s3.us-east-1.amazonaws.com/5e08d75562378/1587189?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27Tabela1%25281%2529.pdf&response-content-type=application%2Fpdf&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20200507T172221Z&X-Amz-SignedHeaders=host&X-Amz-Expires=21600&X-Amz-Credential=AKIAZH6WM4PLTYPZRQMY%2F20200507%2Fus-east-1%2Fs3%2Faws4_request&X-Amz-Signature=f3936156610ea760e6e55249f672a65ad309ec99b97b7668a3861498995b2049) e determine qual algorítimo é melhor para esta tarefa.
 
 > Dica: Se ultilizado eficientemente, o bucket sort gera apenas buckets pequenos.
 
 ###
 
-Esperamos que voçe tenha escolhido utilizar o *Insertion Sort* para essa tarefa, tendo em vista que muitas vezes como eles são pequenos, os buckets já estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos ja ordernados seria O(n).
+Esperamos que você tenha escolhido utilizar o *Insertion Sort* para essa tarefa, tendo em vista que muitas vezes como eles são pequenos, os buckets já estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos já ordenados seria O(n).
 
     void insertion_sort(int v[], int n)
     {
@@ -172,7 +172,7 @@ Esperamos que voçe tenha escolhido utilizar o *Insertion Sort* para essa tarefa
 
     }
 
-Com o algoritimo definido faremos nossa função de ordenação que sera chamada a cada bucket.
+Com o algorítimo definido faremos nossa função de ordenação que sera chamada a cada bucket.
 
     void sort(int *v, int_bucket buckets[]){
       int v_index = 0; 
@@ -201,9 +201,9 @@ Para entender o funcionamento da complexidade deste método, iremos comecar com 
 
   1 - Analise do tempo de execução para distribuição do vetor de entrada em buckets.
 
-  2 - Analise do tempo de execução para ordernação de cada bucket.
+  2 - Analise do tempo de execução para ordenação de cada bucket.
 
-Começaremos com o estudo do caso ideal e desejado pelo Bucket Sort com um tempo linear de ordenação igual a O(n), este que espera buckets com valores já ordenados, consequentemente deixando o ideal para casos em que há poucos valores em cada balde, dado que quanto menos elementos dentro de cada bucket, mais facil será de os mesmos ja se encontrarem ordenados.
+Começaremos com o estudo do caso ideal e desejado pelo Bucket Sort com um tempo linear de ordenação igual a O(n), este que espera buckets com valores já ordenados, consequentemente deixando o ideal para casos em que há poucos valores em cada balde, dado que quanto menos elementos dentro de cada bucket, mais fácil será de os mesmos já se encontrarem ordenados.
 
 Em nossa analise, consideraremos 2 parâmetros n ( numero de elementos ) e k ( numero de buckets ).
 ## Questão 6
@@ -217,7 +217,7 @@ Entretanto, ao tentar compreender a parte 2 da complexidade deste modelo algumas
 Por exemplo, um primeiro palpite comum a ser dado para a complexidade do modelo pode ser: $$\ 0(\frac{n}{k})$$ 
 para cada bucket, ou seja $$\ O(k*(\frac{n}{k}))$$
 
-A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nitido que não se leva um tempo de execução de $$\frac{n}{k}$$, muito menos algum multiplo constante de $$\frac{n}{k}$$.
+A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nítido que não se leva um tempo de execução de $$\frac{n}{k}$$, muito menos algum múltiplo constante de $$\frac{n}{k}$$.
 
 ## Questão 6.a
 
@@ -225,7 +225,7 @@ Tente adivinhar o que aconteceria caso o balde estivesse vazio.
 
 ###
 
-No caso de um balde vazio, o codigo ainda gasta tempo de execução com o mesmo ja que deve analisar se possui algum valor dentro de cada um dos buckets presentes sendo necessario adicionar a formula um elemento constante c0 e c1 que nada mais são que constantes especificas de implementação, passando a fórmula para $$\ O(C_0\frac{n}{k}+C_1)$$.
+No caso de um balde vazio, o código ainda gasta tempo de execução com o mesmo já que deve analisar se possui algum valor dentro de cada um dos buckets presentes sendo necessário adicionar a fórmula um elemento constante c0 e c1 que nada mais são que constantes especificas de implementação, passando a fórmula para $$\ O(C_0\frac{n}{k}+C_1)$$.
 Ao ver a formula a primeira coisa que provavelmente ira pensar é que nada ira mudar já que $$\ O(C_0\frac{n}{k}+C_1) = O(\frac{n}{k})$$ , entretanto, tudo ira mudar ao considerarmos o fator k de multiplicação a complexidade, observe:
 
 
@@ -241,7 +241,7 @@ Tente adivinhar para quais ou qual caso o bucket sort não ira operar em tempo l
 
 ###
 
-Por ser um algoritmo de ordenação que depende de outro algoritmo de ordenação, o bucket sort esta sucetível a considerações extras do outro algoritmo em questão. Como o que utilizamos foi o Insertion Sort, iremos discorrer a respeito do mesmo. O insertion sort é um algoritmo que pode ser levado como quadrático ou linear (no seu caso ideal), dado que para listas ordenadas, o mesmo opera em tempo de O(n), enquanto para listas que não estão ordenadas, opera em O(n²).
+Por ser um algoritmo de ordenação que depende de outro algoritmo de ordenação, o bucket sort esta suscetível a considerações extras do outro algoritmo em questão. Como o que utilizamos foi o Insertion Sort, iremos discorrer a respeito do mesmo. O insertion sort é um algoritmo que pode ser levado como quadrático ou linear (no seu caso ideal), dado que para listas ordenadas, o mesmo opera em tempo de O(n), enquanto para listas que não estão ordenadas, opera em O(n²).
 
   
 ## Questão 6.c
@@ -250,9 +250,9 @@ Levando isso em consideração, o que causaria um bucket a ter uma maior complex
 
 ##
 
-Voltando assim as duas partes da analise de complexidade. Temos a parte de criação de cada bucket, e como ja vimos, a mesma é $$\ O(n + k)$$ e em seguida temos a parte de ordenação de cada bucket, que é delimitada pelo algoritimo do Insertion sort. Este que pode ser linear(melhor caso) ou quadratico(médio e pior caso).
+Voltando assim as duas partes da analise de complexidade. Temos a parte de criação de cada bucket, e como já vimos, a mesma é $$\ O(n + k)$$ e em seguida temos a parte de ordenação de cada bucket, que é delimitada pelo algorítimo do Insertion sort. Este que pode ser linear(melhor caso) ou quadrático(médio e pior caso).
 
-Portanto a complexidade do método bucket sort será basicamente determinada por como os buckets já estarão previamente ordenados. Por isso uma utilização otimizada do bucket sort seria em vetores que geram buckets pequenos.
+Portanto, a complexidade do método bucket sort será basicamente determinada por como os buckets já estarão previamente ordenados. Por isso uma utilização otimizada do bucket sort seria em vetores que geram buckets pequenos.
 
 ## Por hoje é só
 

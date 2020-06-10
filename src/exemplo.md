@@ -26,22 +26,28 @@ Mas e se soubéssemos qual esse intervalo? Por exemplo, nossos valores estão se
 
 ## Questão 1
 
-Você consegue pensar em uma regra que divida sempre esses valores em maior e menor?
+O que parece ser um bom chute para uma regra que divida esses valores em maior e menor?
 
 ###
 
 Nesse caso fica fácil, pois podemos dividir nosso vetor no intervalo de até 500 e maiores que 500.
 
-Mas e se ao invés de dividir em 2 partes quiséssemos dividir em 3 ou mais? Nesse caso achar a mediana não seria o suficiente, teríamos que dividir nosso vetor em vários intervalos pré-definidos, para depois ordena-los. A vantagem disso é que quanto mais intervalos tivermos, menor fica o intervalo a ser ordenado.
+Porém raramente os dois intervalos teriam aproximadamente o mesmo número de elementos, na maioria dos casos um intervalo teria mais elementos que o outro, podendo até mesmo ter todos os elementos do vetor original. O que só nós prejudicaria pois acabariamos com o mesmo problema que tentamos resolver.
+
+Mas e se ao invés de dividir em 2 partes quiséssemos dividir em 3 ou mais?
 
 Consegue ver onde quero chegar?
 
-Essa é basicamente a ideia do bucket sort. Uma vez que sabemos que nossos valores estão distribuídos em um intervalo, podemos usar o conceito do *quick sort* de dividi-lo em pedacinhos e ordenar esses pedaços separadamente. Depois de separados e ordenados, fica fácil juntar de novo.
+Essa é basicamente a ideia do *bucket sort*. Uma vez que sabemos que nossos valores estão distribuídos em um intervalo, podemos usar o conceito do *quick sort* de dividi-lo em pedaços menores e ordenar esses pedaços separadamente, tendos os pedaços menores ja organizados, podemos junta-los e obter nosso produto final.
+
+Chamaremos esses pedaços menores de buckets, pois são como baldes onde inserimos apenas os valores que estão dentro de cada respectivo intervalo.
 
 
 ## Questão 2
 
-Tente pensar em quantos intervalos você consegue sub-dividir um vetor de tamanho `6` com valores de 0 até 999 e qual seria a regra (intervalo) para cada intervalos.
+Para que o *bucket sort* seja eficiante, temos que garantir que nossos elementos estejão divididos uniformemente em varios buckets.
+
+Tente pensar em quantos buckets você consegue sub-dividir um vetor de tamanho `6` com valores de 0 até 999 e qual seria a regra (intervalo) para cada buckets.
 
 > Dica use um vetor real, por exemplo: v = {50, 455, 578, 735, 109, 436}
 
@@ -53,9 +59,7 @@ Por exemplo vamos levar em conta o vetor da Questão 2
 
     v = {50, 455, 578, 735, 109, 436}
 
-Considerando que temos um intervalo de 0 a 999 uma das soluções seria dividir em intervalos de centenas e para que tenhamos todos os intervalos das centenas ([0, 99], [100, 199], [200, 299], ..., [900, 999]) precisaríamos de `10` intervalos.
-
-Chamaremos esses intervalos de buckets, pois são como baldes onde inserimos apenas os valores que estão dentro de cada respectivo intervalo.
+Considerando que temos um intervalo de 0 a 999 uma das soluções seria dividir cada bucket em intervalos de centenas e para que tenhamos todos os intervalos das centenas ([0, 99], [100, 199], [200, 299], ..., [900, 999]) precisaríamos de `10` buckets.
 
 
 ## Questão 3
@@ -203,10 +207,10 @@ Para entender o funcionamento da complexidade deste método, iremos comecar com 
 
   2 - Analise do tempo de execução para ordenação de cada bucket.
 
-Começaremos com o estudo do caso ideal e desejado pelo Bucket Sort com um tempo linear de ordenação igual a O(n), este que espera buckets com valores já ordenados, consequentemente deixando o ideal para casos em que há poucos valores em cada balde, dado que quanto menos elementos dentro de cada bucket, mais fácil será de os mesmos já se encontrarem ordenados.
-
 Em nossa analise, consideraremos 2 parâmetros n ( numero de elementos ) e k ( numero de buckets ).
-## Questão 6
+
+## Questão 6.a
+ 
 
 Qual é a complexidade do bucket sort quando se diz a respeito de organizar a entrada em diferentes buckets?
 
@@ -261,3 +265,9 @@ Portanto, a complexidade do método bucket sort será basicamente determinada po
 ## Extra:
 
 Disponibilizamos o [código fonte](https://github.com/gabrielnoal/desprog-projeto2/tree/master/codigo) para que você possa brincar.
+
+
+## Cada bucket ser ordenado 
+O((n/k)^2)
+Tendo K buckets 
+O((n)^2/k)

@@ -1,11 +1,3 @@
-To do:
-1-Questão 1 ta errada(não existe) O que parece um bom chute
-2-Questão 2 não faz sentido
-3- Melhorar a parte de escolha do insertion sort ("eles não estão ordenados mas eles são pequenos")
-
-
-
-
 Bucket Sort
 =================
 
@@ -53,21 +45,23 @@ Chamaremos esses pedaços menores de buckets, pois são como baldes onde inserim
 
 ## Questão 2
 
-Para que o *bucket sort* seja eficiante, temos que garantir que nossos elementos estejão divididos uniformemente em varios buckets.
+Para que o *bucket sort* seja eficiante, gostariamos de garantir que nossos elementos estejão divididos uniformemente em varios buckets.
 
-Tente pensar em quantos buckets você consegue sub-dividir um vetor de tamanho `6` com valores de 0 até 999 e qual seria a regra (intervalo) para cada buckets.
+Para que o fato citado anteriormente seja valido, seria bom que você tentasse pensar em quantos buckets seria posivel sub-dividir um vetor de tamanho `6` com valores de 0 até 999 e qual seria a regra(intervalo) parece fazer sentido para cada buckets.
 
 > Dica use um vetor real, por exemplo: v = {50, 455, 578, 735, 109, 436}
 
 ###
 
-Como você pode notar existem infinitas regras para sub-dividir esse vetor. Portanto precisamos definir uma maneira "padrão". Para isso primeiramente tomar em conta o intervalo dos valores do vetor original.
+Como você pode notar existem infinitas regras para sub-dividir esse vetor. Portanto precisamos definir apenas qual regra vamos utilizar para cada bucket. Para isso primeiramente temos que tomar em conta o intervalo dos valores do vetor original.
 
 Por exemplo vamos levar em conta o vetor da Questão 2
 
     v = {50, 455, 578, 735, 109, 436}
 
 Considerando que temos um intervalo de 0 a 999 uma das soluções seria dividir cada bucket em intervalos de centenas e para que tenhamos todos os intervalos das centenas ([0, 99], [100, 199], [200, 299], ..., [900, 999]) precisaríamos de `10` buckets.
+
+> Escolhemos separar os buckets em centenas apenas para facilitar o entendimento do algoritimo. Cabe lembrar que essa é uma escolha de quem esta implementando o codigo. Mais pra frente veremos o impacto dessa escolha na complexidade, mas por enquanto SEM SPOILERS
 
 
 ## Questão 3
@@ -163,7 +157,8 @@ Olhe a [tabela de ordenação](https://github.com/gabrielnoal/desprog-projeto2/b
 
 ###
 
-Esperamos que você tenha escolhido utilizar o *Insertion Sort* para essa tarefa, tendo em vista que muitas vezes como eles são pequenos, os buckets já estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos já ordenados seria O(n).
+Esperamos que você tenha escolhido utilizar o *Insertion Sort* para essa tarefa, tendo em vista que em uma situação de utilização eficiente do algorítimo teremos, na maioria das vezes, buckets pequenos (ridículos ou pequenos como na tabela). Com isso o *insertion sort* é perfeito para a nossa implementação, abaixo temos o código dele para você dar uma refrescada na mente. 
+
 
     void insertion_sort(int v[], int n)
     {

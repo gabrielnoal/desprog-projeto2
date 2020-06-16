@@ -242,7 +242,7 @@ Com a noção de que o melhor caso é quando os buckets estão uniformemente dis
  
 Com a necessidade de ordenar o bucket temos a complexidade do *insertion sort* sendo O(n²), mais a complexidade de organizar os buckets O(n) e mais a complexidade de concatenar os buckets em um vetor O(k) ou seja O(n² + n + k), no entanto, pela regra de simplificação temos a complexidade do pior caso sendo O(n²).
  
-Por ultimo vamos descorrer a complexidade do caso médio do *bucket sort*, ou seja, quando os valores estão distribuidos em buckets mas não necessariamente ordenados dentro deles. Primeiramente temos que levar em conta obiviamente como os outros casos a complexidade das partes 1 e 3 sendo elas respectivamente O(n) e O(k).
+Por ultimo vamos discorrer a complexidade do caso médio do *bucket sort*, ou seja, quando os valores estão distribuídos em buckets mas não necessariamente ordenados dentro deles. Primeiramente temos que levar em conta obviamente como os outros casos a complexidade das partes 1 e 3 sendo elas respectivamente O(n) e O(k).
  
 ## Questão 6.c
  
@@ -252,7 +252,7 @@ Qual a complexidade de ordenar 1 bucket no caso médio?
  
 ###  
  
-Como com o *bucket sort* temos n termos divididos em k buckets é intuitivo dizer que a complexidade de ordernar cada buket seria $$\ 0(\frac{n}{k}²)$$ , assim como temos k buckets para ordenar temos a complexidade para ordenar cada bucket sendo $$\ 0(\frac{n²}{k})$$. Assim temos a complexidade final sendo $$\ 0(\frac{n²}{k})$$ + O(n) + O(k), ou seja $$\ 0(\frac{n²}{k} + n + k)$$.
+Como com o *bucket sort* temos n termos divididos em k buckets é intuitivo dizer que a complexidade de ordenar cada bucket seria $$\ 0(\frac{n}{k}²)$$ , assim como temos k buckets para ordenar temos a complexidade para ordenar cada bucket sendo $$\ 0(\frac{n²}{k})$$. Assim temos a complexidade final sendo $$\ 0(\frac{n²}{k})$$ + O(n) + O(k), ou seja $$\ 0(\frac{n²}{k} + n + k)$$.
  
 
 ## That's all folks

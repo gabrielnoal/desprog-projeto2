@@ -223,7 +223,7 @@ Qual você julga que é a complexidade do *bucket sort* quando se diz a respeito
 ###  
  
 Não nos leva muito tempo até entender que será uma complexidade de O(n) para organizar a entrada em buckets, tendo em vista que todos os elementos do vetor devem ser percorridos.
-// TODO falar que k é o numero de buckets
+
 Já para juntar os buckets de volta em um vetor seria O(k), tendo em vista que todos os buckets devem ser percorridos. Com isso percebemos que a primeira e terceira parte do algorítimo são lineares.
  
 Entretanto, falta uma parte crucial da análise de complexidade que é obviamente a de ordenação. Tendo em vista que esta parte depende principalmente do algorítimo de Insertion Sort de uma revisada na complexidade do algorítimo na [tabela de ordenação](https://github.com/gabrielnoal/desprog-projeto2/blob/master/site/img/Tabela_de_ordenacao.pdf).

@@ -17,7 +17,7 @@ void selection_sort(int v[], int n);
 void insertion_sort(int v[], int n);
 void create_buckets(int_bucket *buckets, int n);
 void buckets_partition(int v[], int n, int_bucket buckets[]);
-void combine(int *v, int_bucket buckets[], int v_index, int bucket_index);
+void join(int *v, int_bucket buckets[], int v_index, int bucket_index);
 void bucket_sort(int v[], int n);
 void sort(int *v, int_bucket buckets[]);
 

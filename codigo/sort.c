@@ -123,7 +123,7 @@ void buckets_partition(int v[], int n, int_bucket buckets[])
   }
 }
 
-void combine(int *v, int_bucket buckets[], int v_index, int bucket_index)
+void join(int *v, int_bucket buckets[], int v_index, int bucket_index)
 {
   for (int data_index = 0; data_index < buckets[bucket_index].size; data_index++)
     v[v_index + data_index] = buckets[bucket_index].data[data_index];
@@ -137,7 +137,7 @@ void sort(int *v, int_bucket buckets[]){
     {
       insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size);
 
-      combine(v, buckets, v_index, bucket_index);
+      join(v, buckets, v_index, bucket_index);
 
       v_index += buckets[bucket_index].size;
     }

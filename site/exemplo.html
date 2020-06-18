@@ -19,64 +19,74 @@
 
 <h1>Bucket Sort</h1>
 
-<p>Para entendermos a ideia do bucket sort primeiro faremos uma viagem para o passado até o <a href="https://ensino.hashi.pro.br/desprog/aula9/handout.html" target="_blank">hangout da Aula 9</a> onde analisamos o algoritimo <em>quick sort</em>, imagino que você lembre a ideia basíca dele.</p>
+<p>Para entendermos a ideia do bucket sort primeiro faremos uma viagem para o passado até o <a href="https://ensino.hashi.pro.br/desprog/aula9/handout.html" target="_blank">handout da Aula 9</a> onde analisamos o algorítimo <em>quick sort</em>, imagino que você lembre a ideia básica dele.</p>
 
-<p>Para aqueles com a memória mais limitada, o <em>quick sort</em> se baseia em separar o vetor inicial em duas partes, após a escolha de um pivô, sendo uma parte maior a outra menor, com isso o algoritimo ordena as duas partes separadamente e junta elas tendo em vista que os valores de uma já são maiores que a outra.</p>
+<p>Para aqueles com a memória mais limitada, o <em>quick sort</em> se baseia em separar o vetor inicial em duas partes, após a escolha de um pivô, sendo uma parte maior a outra menor, com isso o algorítimo ordena as duas partes separadamente e junta elas tendo em vista que os valores de uma já são maiores que a outra.</p>
 
 <blockquote><p>Aqui esta o código do <em>quick sort</em> caso queira relembrar.</p></blockquote>
 
 <pre class="prettybox"><code class="prettyprint">void quick_sort_r(int v[], int l, int r) {
 if (l &gt;= r) {
 return;
+
 }
+
 int p = partition(v, l, r); //Separa
 quick_sort_r(v, l, p - 1); //Ordena
 quick_sort_r(v, p + 1, r); //Ordena
+
 }
 
 void quick_sort(int v[], int n) {
 quick_sort_r(v, 0, n - 1);
+
 }</code></pre>
 
 <p>O problema do <em>quick sort</em> é acharmos o pivô que representa a mediana do vetor, pois não sabemos o intervalo dos nossos valores.</p>
 
-<p>Mas e se soubessemos qual esse intervalo? Por exemplo, nossos valores estão sempre entre 0 e 1000.</p>
+<p>Mas e se soubéssemos qual esse intervalo? Por exemplo, nossos valores estão uniformemente destribuidos entre 0 e 1000.</p>
 
 <h2>Questão 1</h2>
 
-<p>Você consegue pensar em uma regra que divida sempre esses valores em maior e menor?</p>
+<p>O que parece ser uma boa suposição para dividir esses valores em maior e menor?</p>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<p>Nesse caso fica facil, pois podemos dividir nosso vetor no intevalo de até 500 e maiores que 500.</p>
+<p>Nesse caso fica fácil, pois podemos dividir nosso vetor no intervalo de até 500 e maiores que 500.</p>
 
-<p>Mas e se ao invés de dividir em 2 partes quisessemos dividir em 3 ou mais? Nesse caso achar a mediana não seria o suficiente, teriamos que dividir nosso vetor em varios intervalos pré-definidos, para depois ordena-los. A vantagem disso é que quanto mais intervalos tivermos, menor fica o intervalo a ser ordenado.</p>
+<p>Porém raramente os dois intervalos teriam aproximadamente o mesmo número de elementos, na maioria dos casos um intervalo teria mais elementos que o outro, podendo até mesmo ter todos os elementos do vetor original. O que só nós prejudicaria pois acabariamos com o mesmo problema que tentamos resolver.</p>
+
+<p>Mas e se ao invés de dividir em 2 partes quiséssemos dividir em 10 ou mais?</p>
 
 <p>Consegue ver onde quero chegar?</p>
 
-<p>Essa é basicamente a ideia do bucket sort. Uma vez que sabemos que nossos valores estão distribuido em um intervalo, podemos usar o conceito do <em>quick sort</em> de dividi-lo em pedacinhos e ordernar esses pedaços separadamente. Depois de separados e ordenados, fica facil juntar de novo.</p>
+<p>Essa é basicamente a ideia do <em>bucket sort</em>. Uma vez que sabemos que nossos valores estão distribuídos em um intervalo, podemos usar o conceito de dividi-lo em pedaços <strong>menores</strong> e ordenar esses pedaços <strong>separadamente</strong>, tendos os pedaços menores já ordenados, podemos junta-los e obter nosso produto final.</p>
+
+<p>Chamaremos esses pedaços menores de <em>buckets</em>, pois são como baldes onde inserimos apenas os valores que estão dentro de cada respectivo intervalo.</p>
 
 <h2>Questão 2</h2>
 
-<p>Tente pensar em quantos intervalos você consegue sub-dividir um vetor de tamanho <code class="prettybox prettyprint">6</code> com valores de 0 até 999 e qual seria a regra (intervalo) para cada intervalos.</p>
+<p>Para que o <em>bucket sort</em> seja eficiante, gostariamos de garantir que nossos elementos estejão divididos uniformemente em varios <em>buckets</em>.</p>
+
+<p>Para que o fato citado anteriormente seja valido, seria bom que você tentasse pensar em quantos <em>buckets</em> seria posivel sub-dividir um vetor de tamanho <code class="prettybox prettyprint">6</code> com valores de 0 até 999 e qual seria a regra(intervalo) parece fazer sentido para cada <em>buckets</em>.</p>
 
 <blockquote><p>Dica use um vetor real, por exemplo: v = {50, 455, 578, 735, 109, 436}</p></blockquote>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<p>Como você pode notar existem infinitas regras para sub-dividir esse vetor. Portanto precisamos definir uma maneira &quot;padrão&quot;. Para isso primeiramente tomar em conta o intervalo dos valores do vetor original.</p>
+<p>Como você pode notar existem infinitas regras para sub-dividir esse vetor. Portanto precisamos definir apenas qual regra vamos utilizar para cada bucket. Para isso primeiramente temos que tomar em conta o intervalo dos valores do vetor original.</p>
 
 <p>Por exemplo vamos levar em conta o vetor da Questão 2</p>
 
 <pre class="prettybox"><code class="prettyprint">v = {50, 455, 578, 735, 109, 436}</code></pre>
 
-<p>Considerando que temos um intervalo de 0 a 999 uma das soluções seria dividir em intervalos de centenas e para que tenhamos todos os intervalos das centenas ([0, 99], [100, 199], [200, 299], ..., [900, 999]) precisariamos de <code class="prettybox prettyprint">10</code> intervalos.</p>
+<p>Considerando que temos um intervalo de 0 a 999 uma das soluções seria dividir cada bucket em intervalos de centenas e para que tenhamos todos os intervalos das centenas ([0, 99], [100, 199], [200, 299], ..., [900, 999]) precisaríamos de <code class="prettybox prettyprint">10</code> <em>buckets</em>.</p>
 
-<p>Chamaremos esses intervalos de buckets, pois são como baldes onde inserimos apenas os valores que estão dentro de cada respectivo intervalo.</p>
+<blockquote><p>Escolhemos separar os <em>buckets</em> em centenas apenas para facilitar o entendimento do algoritimo. Cabe lembrar que essa é uma escolha de quem esta implementando o codigo. Mais pra frente veremos o impacto dessa escolha na complexidade, mas por enquanto SEM SPOILERS</p></blockquote>
 
 <h2>Questão 3</h2>
 
-<p>Agora que temos 10 buckets, podemos fazer um vetor de buckets dessa forma cada valor do nosso vetor de buckets sera uma lista apenas com valores com o mesmo valor na casa da centena.</p>
+<p>Agora que temos 10 <em>buckets</em>, podemos fazer um vetor de <em>buckets</em> dessa forma cada valor do nosso vetor de <em>buckets</em> será uma lista apenas com valores com o mesmo valor na casa da centena.</p>
 
 <p>Para facilitar o código criaremos um struct chamado int_bucket que contem o numero de elementos (size) dentro dele e um ponteiro para os valores (*data):</p>
 
@@ -86,18 +96,19 @@ quick_sort_r(v, 0, n - 1);
   int *data;
 } int_bucket</code></pre>
 
-<p>Tente criar um pseudo-codigo que cria um vetor de buckets e separa os valores do vetor original nesses buckets.</p>
+<p>Tente criar um pseudo-código que cria um vetor de <em>buckets</em> (usando <em>int_bucket</em>) e separa os valores do vetor original nesses <em>buckets</em>.</p>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<pre class="prettybox"><code class="prettyprint">cria um vetor de int_bucket do tamanho do numero de buckets 
-Para um i de 0 até até numero de buckets - 1, iterando de 1 em 1:
-  Define o tamano do buckets[i] = 0;
+<pre class="prettybox"><code class="prettyprint">cria um vetor de int_bucket do tamanho do número de buckets 
+Para um i de 0 até numero de buckets - 1, iterando de 1 em 1:
+  Define o tamanho do buckets[i] = 0;
   Aloca memoria para o buckets[i];
 
-Para um j de 0 até n - 1 iterando de 1 em 1: //Sendo n o tamanho do nosso vetor original
-  Pega a o numero mais a esqueda do nosso valor atual;
-  Insere nosso valor no bucket correto;
+//Sendo n o tamanho do vetor original
+Para um j de 0 até n - 1, iterando de 1 em 1: 
+  Pega a o numero mais a esquerda (centena) do valor atual;
+  Insere o valor no bucket correto;
   Aumenta o tamanho do bucket;</code></pre>
 
 <p>Podemos traduzir isso para <em>C</em> da seguinte maneira:</p>
@@ -116,17 +127,21 @@ void create_buckets(int_bucket *buckets, int n)
   {
     buckets[bucket_index].size = 0;
     buckets[bucket_index].data = (int *)malloc(sizeof(int) * n);
+
   }
+
 }
 
 void buckets_partition(int v[], int n, int_bucket buckets[])
 {
   for (int v_index = 0; v_index &lt; n; v_index++)
   {
-    int bucket_index = v[v_index] / 100;
-    buckets[bucket_index].data[buckets[bucket_index].size] = v[v_index];
-    buckets[bucket_index].size++;
+    int bucket_index = v[v_index] / 100;  //INDEX == CENTENA
+    buckets[bucket_index].data[buckets[bucket_index].size] = v[v_index]; //ADD O VALOR NO BUCKET
+    buckets[bucket_index].size++; //AUMENTA TAMANHO
+
   }
+
 }
 
 void bucket_sort(int v[], int n)
@@ -138,36 +153,37 @@ void bucket_sort(int v[], int n)
 
   //Separa em buckets
   buckets_partition(v, n, buckets);
+
 }</code></pre>
 
-<p>Se rodarmos esse codigo com nosso vetor <code class="prettybox prettyprint">V</code> teremos buckets exatamente assim:</p>
+<p>Se rodarmos esse código com nosso vetor <code class="prettybox prettyprint">V</code> teremos buckets exatamente assim:</p>
 
-<pre class="prettybox"><code class="prettyprint">Bucket [0,99]: {50}
-Bucket [100,199]: {109}
-Bucket [200,299]: {}
-Bucket [300,399]: {}
-Bucket [400,499]: {455, 436}
-Bucket [500,599]: {578}
-Bucket [600,699]: {}
-Bucket [700,799]: {735}
-Bucket [800,899]: {}
-Bucket [900,999]: {}</code></pre>
+<pre class="prettybox"><code class="prettyprint">Bucket [0,99]: {50}           // 0
+Bucket [100,199]: {109}       // 1
+Bucket [200,299]: {}          // 2
+Bucket [300,399]: {}          // 3
+Bucket [400,499]: {455, 436}  // 4
+Bucket [500,599]: {578}       // 5
+Bucket [600,699]: {}          // 6
+Bucket [700,799]: {735}       // 7
+Bucket [800,899]: {}          // 8
+Bucket [900,999]: {}          // 9</code></pre>
 
-<p>Agora que temos os buckets quase prontos, podemos notar que o Bucket[400, 499] não esta ordenado! Ou seja não podemos apenas juntar todos eles.</p>
+<p>Agora que temos os <em>buckets</em> quase prontos, podemos notar que o Bucket[400, 499] não esta ordenado! Ou seja não podemos apenas juntar todos eles.</p>
 
 <h2>Questão 4</h2>
 
-<p>Será necessario a ultilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da caracteristica do nosso bucket a ser ordernado podemos optar por uma ou outra ordenação.</p>
+<p>Será necessário a utilização de um método de ordenação para cada bucket podendo ser o mesmo para todos ou um para cada. Isso significa que dependendo da característica do nosso bucket a ser ordenado podemos optar por uma ou outra ordenação.</p>
 
-<p>Nesse handout vamos ultilizar um mesmo algoritimo de ordenação, que já aprendemos, para todos os buckets.</p>
+<p>Nesse handout vamos utilizar um mesmo algorítimo de ordenação, que já aprendemos, para todos os <em>buckets</em>.</p>
 
-<p>Olhe a <a href="https://learn-us-east-1-prod-fleet01-xythos.s3.us-east-1.amazonaws.com/5e08d75562378/1587189?response-content-disposition=inline%3B%20filename%2A%3DUTF-8%27%27Tabela1%25281%2529.pdf&amp;response-content-type=application%2Fpdf&amp;X-Amz-Algorithm=AWS4-HMAC-SHA256&amp;X-Amz-Date=20200507T172221Z&amp;X-Amz-SignedHeaders=host&amp;X-Amz-Expires=21600&amp;X-Amz-Credential=AKIAZH6WM4PLTYPZRQMY%2F20200507%2Fus-east-1%2Fs3%2Faws4_request&amp;X-Amz-Signature=f3936156610ea760e6e55249f672a65ad309ec99b97b7668a3861498995b2049" target="_blank">tabela de ordeção</a> e determine qual algoritimo é melhor para esta tarefa.</p>
+<p>Olhe a <a href="https://github.com/gabrielnoal/desprog-projeto2/blob/master/site/img/Tabela_de_ordenacao.pdf" target="_blank">tabela de ordenação</a> e determine qual algorítimo é melhor para esta tarefa.</p>
 
-<blockquote><p>Dica: Se ultilizado eficientemente, o bucket sort gera apenas buckets pequenos.</p></blockquote>
+<blockquote><p>Dica: Se ultilizado eficientemente, o bucket sort gera apenas <em>buckets</em> <strong>pequenos</strong>.</p></blockquote>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<p>Esperamos que voçe tenha escolhido utilizar o <em>Insertion Sort</em> para essa tarefa, tendo em vista que muitas vezes como eles são pequenos, os buckets já estarão ordenados ou até mesmo terão apenas um valor. sua complexidade para vetores pequenos ja ordernados seria O(n).</p>
+<p>Esperamos que você tenha escolhido utilizar o <em>Insertion Sort</em> para essa tarefa, tendo em vista que em uma situação de utilização eficiente do algorítimo teremos, na maioria das vezes, <em>buckets</em> pequenos (ridículos ou pequenos como na tabela). Com isso o <em>insertion sort</em> é perfeito para a nossa implementação, abaixo temos o código dele para você dar uma refrescada na mente. </p>
 
 <pre class="prettybox"><code class="prettyprint">void insertion_sort(int v[], int n)
 {
@@ -188,13 +204,14 @@ Bucket [900,999]: {}</code></pre>
 
 }</code></pre>
 
-<p>Com o algoritimo definido faremos nossa função de ordenação que sera chamada a cada bucket.</p>
+<p>Com o algorítimo definido faremos nossa função de ordenação que sera chamada a cada bucket.</p>
 
 <pre class="prettybox"><code class="prettyprint">void sort(int *v, int_bucket buckets[]){
   int v_index = 0; 
   for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
   {
     insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size); 
+
   }
 
 }</code></pre>
@@ -205,69 +222,100 @@ Bucket [900,999]: {}</code></pre>
 {
   for (int data_index = 0; data_index &lt; buckets[bucket_index].size; data_index++)
     v[v_index + data_index] = buckets[bucket_index].data[data_index]; 
+
+}
+
+void sort(int *v, int_bucket buckets[]){
+  int v_index = 0;
+  for (int bucket_index = 0; bucket_index &lt; bucket_numbers; bucket_index++)
+  {
+    if (buckets[bucket_index].size) //Verifica se o bucket esta vazio
+    {
+      insertion_sort(buckets[bucket_index].data, buckets[bucket_index].size); //ORDENA
+
+      combine(v, buckets, v_index, bucket_index); //Adiciona ao vetor oririnal
+
+      v_index += buckets[bucket_index].size; 
+
+    }
+
+    free(buckets[bucket_index].data); 
+
+  }
+}
+
+void bucket_sort(int v[], int n)
+{
+  int_bucket buckets[bucket_numbers];
+
+  //Cria Bucket
+  create_buckets(buckets, n);
+
+  //Separa em buckets
+  buckets_partition(v, n, buckets);
+
+  //Ordena e combina
+  sort(v, buckets)
+
 }</code></pre>
 
 <p>Muita calma nessa hora, sem fechar a aba ainda. Como de costume ainda falta uma parte essencial do handout, a tão adorada análise de complexidade!</p>
 
-<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+<p>Para entender o funcionamento da complexidade deste método, iremos começar com o entendimento de três partes cruciais para o método em questão, sendo elas: </p>
 
-<p>Para entender o funcionamento da complexidade deste método, iremos comecar com o entendimento de duas partes cruciais para o metodo em questão, sendo elas: </p>
+<p>  1 - Análise do tempo de execução para distribuição do vetor de entrada em <em>buckets</em>.</p>
 
-<p>  1 - Analise do tempo de execução para distribuição do vetor de entrada em buckets.</p>
+<p>  2 - Análise do tempo de execução para ordenação de cada bucket.</p>
 
-<p>  2 - Analise do tempo de execução para ordernação de cada bucket.</p>
+<p>  3 - Análise do tempo da concatenação dos <em>buckets</em> de volta para o vetor.</p>
 
-<p>Começaremos com o estudo do caso ideal e desejado pelo Bucket Sort com um tempo linear de ordenação igual a O(n), este que espera buckets com valores já ordenados, consequentemente deixando o ideal para casos em que há poucos valores em cada balde, dado que quanto menos elementos dentro de cada bucket, mais facil será de os mesmos ja se encontrarem ordenados.</p>
+<p>Em nossa análise, consideraremos 2 parâmetros, n ( número de elementos ) e k (numero de <em>buckets</em> ).</p>
 
-<p>Em nossa analise, consideraremos 2 parâmetros n ( numero de elementos ) e k ( numero de buckets ).</p>
+<h2>Questão 5.a</h2>
 
-<h2>Questão 6</h2>
+<p>Vamos começar pela parte 1 e 3</p>
 
-<p>Qual é a complexidade do bucket sort quando se diz a respeito de organizar a entrada em diferentes buckets?</p>
-
-<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
-
-<p>Não nos leva muito tempo até entender que será uma complexidade de O(n), tendo em vista que todos os elementos do vetor devem ser percorridos.
-Entretanto, ao tentar compreender a parte 2 da complexidade deste modelo algumas incertezas são criadas.
-Por exemplo, um primeiro palpite comum a ser dado para a complexidade do modelo pode ser: \(\ 0(\frac{n}{k})\) 
-para cada bucket, ou seja \(\ O(k*(\frac{n}{k}))\)</p>
-
-<p>A razão para que o que foi dito acima não esta 100% correto é porque falta um fator constante no calculo da complexidade. Quando cada bucket é visitado e cada um dos elementos é analisado, é nitido que não se leva um tempo de execução de \(\frac{n}{k}\), muito menos algum multiplo constante de \(\frac{n}{k}\).</p>
-
-<h2>Questão 6.a</h2>
-
-<p>Tente adivinhar o que aconteceria caso o balde estivesse vazio.</p>
+<p>Qual você julga que é a complexidade do <em>bucket sort</em> quando se diz a respeito de organizar a entrada em diferentes <em>buckets</em> e concatena-los de volta em um vetor?</p>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<p>No caso de um balde vazio, o codigo ainda gasta tempo de execução com o mesmo ja que deve analisar se possui algum valor dentro de cada um dos buckets presentes sendo necessario adicionar a formula um elemento constante c0 e c1 que nada mais são que constantes especificas de implementação, passando a fórmula para \(\ O(C_0\frac{n}{k}+C_1)\).
-Ao ver a formula a primeira coisa que provavelmente ira pensar é que nada ira mudar já que \(\ O(C_0\frac{n}{k}+C_1) = O(\frac{n}{k})\) , entretanto, tudo ira mudar ao considerarmos o fator k de multiplicação a complexidade, observe:</p>
+<p>Não nos leva muito tempo até entender que será uma complexidade de O(n) para organizar a entrada em <em>buckets</em>, tendo em vista que todos os elementos do vetor devem ser percorridos.</p>
 
-<p>\(\ O(n)=O(k*(C_0*\frac{n}{k}+C_1)) = O((C_0)_(n) + (k)_(C_1))\)</p>
+<p>Já para juntar os <em>buckets</em> de volta em um vetor seria O(k), tendo em vista que todos os <em>buckets</em> devem ser percorridos. Com isso percebemos que a primeira e terceira parte do algorítimo são lineares.</p>
 
-<p>Percebemos então que a formula é totalmente dependente de k, fazendo com que o tempo de execução seja \(\ O(n + k)\)</p>
+<p>Entretanto, falta uma parte crucial da análise de complexidade que é obviamente a de ordenação. Tendo em vista que esta parte depende principalmente do algorítimo de Insertion Sort de uma revisada na complexidade do algorítimo na <a href="https://github.com/gabrielnoal/desprog-projeto2/blob/master/site/img/Tabela_de_ordenacao.pdf" target="_blank">tabela de ordenação</a>.</p>
 
-<p>Agora que entendemos como funciona a análise da complexidade do bucket sort em sua forma esperada (linear), vamos entender o que acontece nos outros casos para o bucket sort, quando ele não é linear.</p>
+<p>Primeiramente vamos analisar o caso ideal do <em>bucket sort</em>, esse que corresponde ao caso dos elementos estarem uniformemente distribuídos e todos os <em>buckets</em> estarem ordenados, isso faz com que a complexidade do <em>insertion sort</em> seja O(n), porém como temos <em>buckets</em> uniformemente distribuídos pelos <em>buckets</em> temos a complexidade sendo O(1*k). </p>
 
-<h2>Questão 6.b</h2>
+<p>Assim temos a complexidade de organizar os <em>buckets</em> O(n) mais a complexidade do <em>insertion sort</em> passando pelos <em>buckets</em> ordenados que seria O(k)  mais a complexidade da concatenação final que também é O(k), resultando, portanto, em uma complexidade do melhor caso em O(n + 2*k), no entanto, pela regra de simplificação temos a complexidade do melhor caso sendo O(n + k).</p>
 
-<p>Tente adivinhar para quais ou qual caso o bucket sort não ira operar em tempo linear O(n + k).</p>
+<h2>Questão 5.b</h2>
+
+<p>Agora que já analisamos o melhor caso, tente descobrir qual seria o pior caso do <em>bucket sort</em> em termos de complexidade temporal.</p>
 
 <h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
 
-<p>Por ser um algoritmo de ordenação que depende de outro algoritmo de ordenação, o bucket sort esta sucetível a considerações extras do outro algoritmo em questão. Como o que utilizamos foi o Insertion Sort, iremos discorrer a respeito do mesmo. O insertion sort é um algoritmo que pode ser levado como quadrático ou linear (no seu caso ideal), dado que para listas ordenadas, o mesmo opera em tempo de O(n), enquanto para listas que não estão ordenadas, opera em O(n²).</p>
+<p>Com a noção de que o melhor caso é quando os <em>buckets</em> estão uniformemente distribuídos e ordenados, você deve ter adivinhado que o pior caso seria quando todos os elementos do vetor estiverem em um curto intervalo, assim sendo colocados todos no mesmo bucket e desordenados.</p>
 
-<h2>Questão 6.c</h2>
+<p>Com a necessidade de ordenar o bucket temos a complexidade do <em>insertion sort</em> sendo O(n²), mais a complexidade de organizar os <em>buckets</em> O(n) e mais a complexidade de concatenar os <em>buckets</em> em um vetor O(k) ou seja O(n² + n + k), no entanto, pela regra de simplificação temos a complexidade do pior caso sendo O(n²).</p>
 
-<p>Levando isso em consideração, o que causaria um bucket a ter uma maior complexidade?</p>
+<p>Por ultimo vamos discorrer a complexidade do caso médio do <em>bucket sort</em>, ou seja, quando os valores estão distribuídos em <em>buckets</em> mas não necessariamente ordenados dentro deles. Primeiramente temos que levar em conta obviamente como os outros casos a complexidade das partes 1 e 3 sendo elas respectivamente O(n) e O(k).</p>
 
-<h2></h2>
+<h2>Questão 5.c</h2>
 
-<p>Voltando assim as duas partes da analise de complexidade. Temos a parte de criação de cada bucket, e como ja vimos, a mesma é \(\ O(n + k)\) e em seguida temos a parte de ordenação de cada bucket, que é delimitada pelo algoritimo do Insertion sort. Este que pode ser linear(melhor caso) ou quadratico(médio e pior caso).</p>
+<p>Qual a complexidade de ordenar 1 bucket no caso médio?</p>
 
-<p>Portanto a complexidade do método bucket sort será basicamente determinada por como os buckets já estarão previamente ordenados. Por isso uma utilização otimizada do bucket sort seria em vetores que geram buckets pequenos.</p>
+<blockquote><p>Dica: A complexidade de ordenar um vetor com n termos com o <em>Insertion sort</em> é O(n²).</p></blockquote>
 
-<h2>Por hoje é só</h2>
+<h3><a href="">continuar</a> ou <a href="">terminar</a></h3>
+
+<p>Como com o <em>bucket sort</em> temos n termos divididos em k <em>buckets</em> é intuitivo dizer que a complexidade de ordenar cada bucket seria \(\ 0(\frac{n}{k}²)\) , assim como temos k <em>buckets</em> para ordenar temos a complexidade para ordenar cada bucket sendo \(\ 0(\frac{n²}{k})\). Assim temos a complexidade final sendo \(\ 0(\frac{n²}{k})\) + O(n) + O(k), ou seja \(\ 0(\frac{n²}{k} + n + k)\).</p>
+
+<p>De tal forma que seria possível concluirmos o fato, de que o <em>bucket sort</em> não é um algoritmo aplicável para qualquer vetor, dado que para uma operação otimizada do <em>bucket sort</em> os buckets devem ser arranjados de forma eficiente e os elementos devem estar, mais ou menos, uniformemente distribuídos. Como é possível notar o <em>bucket sort</em> tem uma aplicação especifica no mundo de algorítimos de ordenação, no entanto existem casos específicos em que ele é extremamente benéfico.</p>
+
+<p>Um exemplo claro em que ele é eficiente é quando existe a necessidade de ordenar listas gigantescas, as quais qualquer algorítimo teria problemas em termos de memória, nestes casos o <em>bucket sort</em> pode ser utilizado de modo que os buckets sejam separados em arquivos separados e ordenados separadamente.</p>
+
+<h2>That&#39;s all folks</h2>
 
 <p class="figure"><img alt="balde" src="img/balde.jpg" title="balde" class="raster"/></p>
 
